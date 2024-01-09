@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Classification - Machine Learning Theory</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <link href="../stylesheets/extra.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Machine Learning Theory</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Machine Learning Theory</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM/" class="nav-link">Support Vector Machine</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM2/" class="nav-link">SVM2</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Types%20of%20Models/" class="nav-link">Types of Models</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">Classification</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../clustering/" class="nav-link">Clustering</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../estimation/" class="nav-link">Estimation</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../kernel_pca/" class="nav-link">Kernel PCA</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../pca/" class="nav-link">Principal Component Analysis (PCA)</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../perceptron_learning/" class="nav-link">Logistic Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../regression/" class="nav-link">Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../supervised_learning/" class="nav-link">Supervised Learning</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Img <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../img/Representation%20Learning/" class="dropdown-item">Principal Component Analysis (PCA)</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../Types%20of%20Models/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../clustering/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#classification" class="nav-link">Classification</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#introduction-to-binary-classification" class="nav-link">Introduction to Binary Classification</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#k-nearest-neighbours-knn" class="nav-link">K-Nearest Neighbours (KNN)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#introduction-to-decision-trees" class="nav-link">Introduction to Decision Trees</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#decision-tree-algorithm" class="nav-link">Decision Tree Algorithm</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#generative-and-discriminative-models" class="nav-link">Generative and Discriminative Models</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Throughout the diagrams I have used red color to indicate a +1 or 
+positive label and blue color for -1 or a negative label </p>
+</div>
+<h1 id="classification">Classification</h1>
+<h2 id="introduction-to-binary-classification">Introduction to Binary Classification</h2>
+<p>For a set of datapoints <span class="arithmatex">\(\{ x_1 , x_2 , x_3 ... x_n \}\)</span> where 
+<span class="arithmatex">\(x \in \mathbb{R}^d\)</span> and labels <span class="arithmatex">\(\{ y_1 , y_2 , y_3 ... y_n \}\)</span> 
+where <span class="arithmatex">\(y \in \{ 0,1 \} / \{ -1,1 \}\)</span>.
+Our goal is to get a function <span class="arithmatex">\(h\)</span> which maps the datapoints 
+to the classes (<span class="arithmatex">\(h:\mathbb{R}^d \to \{ 0,1 \}\)</span>).</p>
+<h3 id="loss-function">Loss Function</h3>
+<div class="arithmatex">\[\text{Loss}(h) = \frac{1}{n} \sum_{i=1}^n \mathbb{1}(h(x_i) \neq y_i)
+\quad \quad \quad \mathbb{1}(z) = \begin{cases} 1 &amp; \text{if true} \\
+0 &amp; \text{otherwise} \end{cases}\]</div>
+<blockquote>
+<p>Like in the case of linear regression , where we restricted the 
+space for the loss function , to a linear space ; We can do something 
+similar to that here too</p>
+</blockquote>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\underset{h \in \mathcal{H}_\text{linear}}{\min} \sum_{i=1}^n \mathbb{1}(h(x_i) \neq y_i) \\
+\\
+\text{where,}\\
+\\
+\mathcal{H}_\text{linear} = \{ h_w : h_w(x) = \text{sign}(w^T x) \} \\
+\text{sign}(z) = \begin{cases} 1 &amp; \text{if z&gt;0} \\ 0 &amp; \text{otherwise} \end{cases}
+\end{split}
+\end{equation*}\]</div>
+<p><img alt="" src="../img/linear_loss.png" /></p>
+<blockquote>
+<p>The above problem is an NP-Hard Problem in general.
+In regression we used to take the gradient , set it to zero and find 
+the <span class="arithmatex">\(w\)</span>, that doesnt apply here because the loss here can only take 2 
+discrete values (0 or 1) which makes this loss function non - differentiable
+an non - continuous.</p>
+</blockquote>
+<p>Can we somehow use linear regression to solve for this classification
+problem?</p>
+<p>For a dataset <span class="arithmatex">\(\{(x_1 , y_1) , (x_2,y_2) , ... (x_n , y_n) \}\)</span> , then we input
+this dataset to a linear regression model which gives out a <span class="arithmatex">\(w \in \mathbb{R}^d\)</span>.
+At the end we use this <span class="arithmatex">\(w\)</span> to get <span class="arithmatex">\(h_w\)</span> by solving for <span class="arithmatex">\(w^Tx =0\)</span> (<span class="arithmatex">\(h_w : \mathbb{R}^d \to \{ 0,1 \}\)</span>).</p>
+<blockquote>
+<p>Is this a good idea? Does this help us?</p>
+</blockquote>
+<p><img alt="" src="../img/datapoint_loss_func.png" /></p>
+<video width="800"  controls>
+    <source src="../videos/LinearLoss.mp4" type="video/mp4">
+</video>
+
+<p>Now if we add more positive label datapoints ,
+<img alt="" src="../img/skewed_loss_func.png" /></p>
+<video width="800" style="filter: none;" controls>
+    <source src="../videos/LinearLoss_2.mp4" type="video/mp4">
+</video>
+
+<p>We can see that the <span class="arithmatex">\(w\)</span> gets skewed which in turn changes <span class="arithmatex">\(h_w\)</span>.
+The above algorithm depends on a linear regression model which solves for <span class="arithmatex">\(w\)</span>
+by taking into account all the datapoints.</p>
+<p>From a linear classification point of view , the classifying line <span class="arithmatex">\(h_w\)</span> shouldnt 
+be changed when new datapoints are introduced on either side but from a
+regression point of view these datapoints which are far apart from the classifying line 
+,we are trying to minimize over all the datapoints , because of which  our <span class="arithmatex">\(w\)</span> gets 
+tilted back and forth. </p>
+<blockquote>
+<p>This will give us lines which dont actually classify the datapoints properly.</p>
+</blockquote>
+<div class="admonition abstract">
+<p class="admonition-title">Conclusion</p>
+<p>Regression is sensitive to location of the datapoints and not just the 
+"side" on which the data lies with respect to the separator. </p>
+</div>
+<h2 id="k-nearest-neighbours-knn">K-Nearest Neighbours (KNN)</h2>
+<blockquote>
+<p>For some set of datapoints with corresponding labels , if a new datapoint's (for which we predict the label)
+belongs to the training dataset , then we already have an answer for its (new datapoint's) label,
+but what to do when it doesnt belong to the training dataset?</p>
+</blockquote>
+<ul>
+<li>
+<p>Given a test points <span class="arithmatex">\(x_\text{test} \in \mathbb{R}^d\)</span> , find the closest 
+point <span class="arithmatex">\(x^*\)</span> to <span class="arithmatex">\(x_\text{test}\)</span> in the training set.</p>
+</li>
+<li>
+<p>Predict <span class="arithmatex">\(y_\text{test} = y^*\)</span></p>
+</li>
+</ul>
+<blockquote>
+<p>Is this a good algorithm? </p>
+</blockquote>
+<div class="admonition failure">
+<p class="admonition-title">Issues with this algorithm</p>
+<ul>
+<li>This algorithm can get affected by outliers. </li>
+<li>Lets say our nearest point to <span class="arithmatex">\(x_\text{test}\)</span> happens to be an outlier,
+then our algorithm will predict the same value as <span class="arithmatex">\(y^*\)</span> , which may label
+the point wrongly.</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Simple Fix for Issue Above</p>
+<ul>
+<li>Given <span class="arithmatex">\(x_\text{test}\)</span> , find the <span class="arithmatex">\(k\)</span> closest points in the training dataset 
+<span class="arithmatex">\((x_1^* , x_2^* , ... x_k^*)\)</span>.</li>
+<li>Predict <span class="arithmatex">\(y_\text{test} = \text{Majority}(y_1^* , y_2^* , ... y_k^*)\)</span></li>
+</ul>
+</div>
+<p>We have to supply the parameter <span class="arithmatex">\(k\)</span> for the above fix , which the data does 
+not tell us, so how many neighbours we should look for?</p>
+<h3 id="decision-boundry">Decision Boundry</h3>
+<h4 id="case-1-k-1">Case 1 (k = 1)</h4>
+<p>Lets look at the case when <span class="arithmatex">\(k=1\)</span>,</p>
+<p><img alt="" src="../img/dec_boundry_k1.png" /></p>
+<p><strong>Note</strong> that these datapoints already have specified labels which comes from
+the dataset.</p>
+<p>Because <span class="arithmatex">\(k=1\)</span> we get "holes" in certain regions for the decision boundry,
+looking at it objectively the blue point in the red region and vis a vis are 
+certainly outliers and should be ignored , but <strong>our classification algorithm is 
+sensitive to outliers.</strong></p>
+<p>Also on the extreme right end we can see that there are some red points , which makes 
+the whole area on the right region as red , ideally that should have been blue , 
+as those extreme right red points are outliers.</p>
+<blockquote>
+<p>Now we know that taking <span class="arithmatex">\(k=1\)</span> is a bad idea. ;C</p>
+</blockquote>
+<div class="admonition info">
+<p class="admonition-title">Animation</p>
+<p><video width="800" style="filter: none;" controls>
+    <source src="../videos/KNN (k=1).mp4" type="video/mp4">
+</video></p>
+<p>The nearest datapoint to <span class="arithmatex">\(x_\text{test}\)</span> (White Dot) is 
+the Positively Labelled (Red) Dot.</p>
+</div>
+<h4 id="case-2-kn">Case 2 (k=n)</h4>
+<p>Now lets look at the case when <span class="arithmatex">\(k=n\)</span></p>
+<p><strong>Note</strong> that these datapoints already have specified labels which comes from
+the dataset.</p>
+<p><img alt="" src="../img/dec_boundry_kn.png" /></p>
+<p>Our algorithm here considers all the datapoints as closest , because <span class="arithmatex">\(k=n\)</span> , 
+hence we take the majority of the labels and make the decision boundry.
+In our case the majority of the labels are blue (negative) and hence the whole 
+region is considered to be blue (negative).</p>
+<p>In other words if we do a prediciton for a label of some point ,
+our answer will always be negative (blue) label.</p>
+<div class="admonition warning">
+<p class="admonition-title">Problems Encountered</p>
+<ul>
+<li>Asking too few (<span class="arithmatex">\(k=1\)</span>) neighbours gives us an outlier issue.</li>
+<li>Asking too many (<span class="arithmatex">\(k=n\)</span>) neighbours gives us the "majority label".</li>
+</ul>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Animation</p>
+<p><video width="800" style="filter: none;" controls>
+    <source src="../videos/KNN (k=n).mp4" type="video/mp4">
+</video></p>
+<p>The Majority Label in the dataset is +1 (Red Dot)
+hence, <span class="arithmatex">\(x_\text{test}\)</span> (White Dot) is Positively Labelled.</p>
+</div>
+<blockquote>
+<p>What to do then?</p>
+</blockquote>
+<p>We must find such a <span class="arithmatex">\(k^*\)</span> that it ignores the outliers and yet it maintains 
+a resonable decision boundry.</p>
+<p><img alt="" src="../img/dec_boundry_k_star.png" /></p>
+<div class="admonition info">
+<p class="admonition-title">Animation</p>
+<p><video width="800" style="filter: none;" controls>
+    <source src="../videos/KNN (k=k*).mp4" type="video/mp4">
+</video></p>
+<ul>
+<li>Here we took k=25.</li>
+<li>It can be seen that <span class="arithmatex">\(x_\text{test}\)</span> (White Dot) lies 
+near a cluster of Positively Labelled (Red) Dots. </li>
+</ul>
+</div>
+<blockquote>
+<p>How do find the right number of neighbours (<span class="arithmatex">\(k^*\)</span>)?</p>
+</blockquote>
+<h4 id="chossing-k">Chossing k*</h4>
+<p>We know that we can treat <span class="arithmatex">\(k\)</span> as an hyperparameter , because its not a part of 
+the algorithm but rather the input which goes into the algorithm.</p>
+<ul>
+<li>We also know that , smaller the <span class="arithmatex">\(k\)</span> the more complicated the decision boundry is.</li>
+<li>To solve this , we choose different values of <span class="arithmatex">\(k\)</span> and cross validate for them 
+respectively.</li>
+</ul>
+<div class="admonition failure">
+<p class="admonition-title">Issues with KNN Algorithm</p>
+<ul>
+<li>Choosing distance function (to identify the closest <span class="arithmatex">\(k\)</span> neighbours) might 
+become an issue.</li>
+<li>When predicting a new datapoint <span class="arithmatex">\(x_\text{test}\)</span> we measure the distance of 
+<span class="arithmatex">\(x_\text{test}\)</span> from <strong>all</strong> the datapoints and then identify the <span class="arithmatex">\(k\)</span> nearest neighbours.
+Now if we want to predict the label for another datapoint , we have to repeat the whole 
+procedure again. This shows that we dont actually learn a "model" and our algorithm 
+solely relies on the datapoints. We cannot throw away the datapoints after learning a 
+"model" , because in the first place , <strong>there is no model for KNN</strong>.
+This is the biggest issue with KNN Algorithm.</li>
+</ul>
+</div>
+<h2 id="introduction-to-decision-trees">Introduction to Decision Trees</h2>
+<p>The input for decision tree algorithm is the usual dataset 
+<span class="arithmatex">\(\{ (x_1,y_1) , (x_2,y_2) , ... (x_n,y_n) \}\)</span> where for all <span class="arithmatex">\(i\)</span> , 
+<span class="arithmatex">\(x_i \in \mathbb{R}^d\)</span> and <span class="arithmatex">\(y \in \{ +1,-1 \}\)</span>.</p>
+<p>The output of this algorithm is a "Decision Tree".</p>
+<div class="admonition question">
+<p class="admonition-title">What is a Decision Tree?</p>
+<p>It is a tree-like structure where each internal node represents a 
+decision based on the value of a specific feature, each branch 
+represents the outcome of that decision, and each leaf node 
+represents the final predicted outcome or class label.</p>
+</div>
+<p><img alt="" src="../img/decision_tree.png" /></p>
+<blockquote>
+<p>How do we get a prediction for a point?</p>
+</blockquote>
+<p>To get the prediction of a datapoint <span class="arithmatex">\(x_\text{test}\)</span> , we simply 
+traverese through the decision tree , asking questions until we 
+reach the leaf nodes.
+At the end we assign the value of the leaf node to <span class="arithmatex">\(y_\text{test}\)</span>.</p>
+<p>The model here (which wasnt in there in KNN) is the decision tree ,
+after training our dataset on the decision tree , we can get rid of 
+the dataset and predict new "test points" by solely relying on the 
+decision tree.</p>
+<div class="admonition question">
+<p class="admonition-title">Whats a question in a decision tree?</p>
+<p>In a decision tree , a question is a feature-value 
+pair.</p>
+<p>Where the "feature" is the feature in the datapoint
+and the "value" is the number with which we compare 
+the "feature".</p>
+</div>
+<blockquote>
+<p>How to measure goodness of a question?</p>
+</blockquote>
+<p>For a dataset <span class="arithmatex">\(D = \{ (x_1 , y_1), (x_2 , y_2), ... (x_n , y_n) \}\)</span> , for 
+a particular feature , we want to ask such a question that (ideally) it 
+matches each datapoint to its label , in other words our predicition 
+should be the same as the labels assigned to a datapoint in the dataset 
+<span class="arithmatex">\(D\)</span>.</p>
+<p>In reality , such questions may not exist , this means we have to somehow
+capture the notion of "impurity" for these questions.</p>
+<h3 id="measure-of-impurity-for-a-set-of-datapoints">Measure of impurity for a set of datapoints</h3>
+<p>For a dataset <span class="arithmatex">\(D = \{ (x_1 , y_1), (x_2 , y_2), ... (x_n , y_n) \}\)</span> , an
+"impurity" function for a question can be given as </p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\text{Entropy}(y_1 , y_2 , ... y_n) &amp;= \text{Entropy}(p) \\
+&amp;= - (p \log_2 p + (1-p) \log_2 (1-p) ) \;\;\;\;\;\;\;\; [\text{convention} \;\; \log_2 0 = 0]
+\end{split}
+\end{equation*}\]</div>
+<p><img alt="" src="../img/entropy_function.png" /></p>
+<video width="800"  controls>
+    <source src="../videos/EntropyFunction.mp4" type="video/mp4">
+</video>
+
+<ul>
+<li>When <span class="arithmatex">\(p=0\)</span> or <span class="arithmatex">\(p=1\)</span> , it means that all of the datapoints 
+are classified to a single label.</li>
+<li>At <span class="arithmatex">\(p=0.5\)</span> , entropy is the highest , hence its the worst case.</li>
+<li><strong>Note</strong> that the entropy at <span class="arithmatex">\(p\)</span> and <span class="arithmatex">\(1-p\)</span> is always the same.</li>
+<li>By convention , <span class="arithmatex">\(p = \frac{\text{Total Number of 1s}}{\text{Total Number of DataPoints}}\)</span></li>
+</ul>
+<blockquote>
+<p>We know that for a given question , we assign labels to datapoints 
+based on the question asked. A question always assigns datapoints to 
+2 labels , either a 1 or -1. We can measure the entropy of the dataset <span class="arithmatex">\(D\)</span> and
+the points which belong to the assigned labels , but how do we combine these 3
+values (entropy of D , entropy of points assigned to label 1 , entropy of points 
+assigned to label -1) into a singular value measure overall impurity?</p>
+</blockquote>
+<h3 id="information-gain">Information Gain</h3>
+<p>Information Gain for a feature,value pair is given as,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\text{Information Gain}(\text{feature,value}) &amp;= \text{Entropy}(D) - [\gamma \text{Entropy}(D_\text{yes}) + (1- \gamma)\text{Entropy}(D_\text{no})] \\
+\\
+\text{where,}\\
+\\
+\gamma &amp;= \frac{|D_\text{yes}|}{|D|}
+\end{split}
+\end{equation*}\]</div>
+<p>We use <span class="arithmatex">\(\gamma\)</span> to take into account the number of datapoints.
+A dataset <span class="arithmatex">\(\alpha\)</span> with 100 datapoints , from which 99 are classified as 
+label 1 and another dataset <span class="arithmatex">\(\beta\)</span> with 10000 datapoints , from which 9900 are
+classified as label 1 , will have the same entropy but the measure of information 
+gain will be higher for <span class="arithmatex">\(\beta\)</span> when compared to <span class="arithmatex">\(\alpha\)</span> , as the decision 
+tree trained on <span class="arithmatex">\(\beta\)</span> was able to classify more datapoints.</p>
+<h2 id="decision-tree-algorithm">Decision Tree Algorithm</h2>
+<ul>
+<li>Discretize each feature in the [min,max] range.</li>
+<li>Pick the question that has the highest information gain.</li>
+<li>Repeat the procedure for <span class="arithmatex">\(D_\text{yes}\)</span> and <span class="arithmatex">\(D_\text{no}\)</span>.</li>
+</ul>
+<blockquote>
+<p>We can keep adding questions to the decision tree by using 
+the above procedure , but where do we stop?</p>
+</blockquote>
+<p>We stop adding new questions to the decision tree after we 
+reach a certain "threshold of purity" , this is generally 
+around 90% purity.</p>
+<h3 id="example-of-decision-tree">Example of Decision Tree</h3>
+<p><img alt="" src="../img/dec_tree_example.png" /></p>
+<p>We classify the blue point on the right side as outlier when 
+we use cross validation method.
+If we were to keep adding more questions such that the outlier no longer 
+lies in an "incorrect" region , the purity of the decision tree may increase
+and so will the complexity.</p>
+<p>Our goal is to make small decision trees with a respectable measure of
+"purity".</p>
+<h2 id="generative-and-discriminative-models">Generative and Discriminative Models</h2>
+<p>In classical classification problems, two types of models are commonly employed:
+generative models and discriminative models.</p>
+<p>Generative models capture the joint distribution between features and labels
+and are represented as:</p>
+<div class="arithmatex">\[P(x,y)\]</div>
+<p>These models focus on modeling the feature generation process.</p>
+<p>On the other hand, discriminative models directly model the conditional 
+probability of labels given the features and are represented as:</p>
+<div class="arithmatex">\[P(y|x)\]</div>
+<p>Discriminative models generate labels solely based on the provided data.</p>
+<p>It is important to understand the differences between generative 
+and discriminative models when choosing an appropriate modeling approach for a given
+classification problem.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

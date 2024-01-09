@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Kernel PCA - Machine Learning Theory</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <link href="../stylesheets/extra.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Machine Learning Theory</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Machine Learning Theory</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM/" class="nav-link">Support Vector Machine</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM2/" class="nav-link">SVM2</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Types%20of%20Models/" class="nav-link">Types of Models</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../classification/" class="nav-link">Classification</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../clustering/" class="nav-link">Clustering</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../estimation/" class="nav-link">Estimation</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">Kernel PCA</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../pca/" class="nav-link">Principal Component Analysis (PCA)</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../perceptron_learning/" class="nav-link">Logistic Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../regression/" class="nav-link">Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../supervised_learning/" class="nav-link">Supervised Learning</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Img <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../img/Representation%20Learning/" class="dropdown-item">Principal Component Analysis (PCA)</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../estimation/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../pca/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#kernel-pca" class="nav-link">Kernel PCA</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#issues-with-pca" class="nav-link">Issues with PCA</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#time-complexity-issue-with-pca" class="nav-link">Time Complexity Issue with PCA</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#non-linear-relationship-of-datapoints" class="nav-link">Non-Linear Relationship of Datapoints</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#kernel-functions" class="nav-link">Kernel Functions</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#kenrel-pca" class="nav-link">Kenrel PCA</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="kernel-pca">Kernel PCA</h1>
+<h2 id="issues-with-pca">Issues with PCA</h2>
+<p>In the previous week we learned about using PCA to reduce 
+the number of features required to represent the dataset 
+without much loss.</p>
+<p>There are 2 main issues/concerns with PCA</p>
+<ul>
+<li>
+<p><strong>Time Complexity</strong> : Finding the eigenvector and eigenvalues of 
+matrix <span class="arithmatex">\(C \in \mathbb{R}^(d \times d)\)</span> typically takes <span class="arithmatex">\(O(d^3)\)</span> time.
+This becomes an issue when the number of features is much higher than number
+of points.</p>
+</li>
+<li>
+<p><strong>PCA works only linearly</strong> : For a dataset with 3 features , if the 
+features are not related linearly then using PCA does not give good 
+results.</p>
+</li>
+</ul>
+<h2 id="time-complexity-issue-with-pca">Time Complexity Issue with PCA</h2>
+<p>The time complexity issue occurs when the number of features is 
+much much greater than the number of points in the dataset , i.e. 
+<span class="arithmatex">\(d &gt;&gt; n\)</span>.</p>
+<p>According to our algorithm the solution for maximizing the variance 
+of the dataset was to find the eigenvector corresponding to the max 
+eigenvalue of <span class="arithmatex">\(C\)</span> , where <span class="arithmatex">\(C = \frac{1}{n}\sum_{i=1}^{n}x_ix_i^T\)</span></p>
+<p>if <span class="arithmatex">\(X \in \mathbb{R}^{d \times n}\)</span> is the matrix which represents 
+all the points in the dataset , <span class="arithmatex">\(C\)</span> can also be written as <span class="arithmatex">\(C = \frac{1}{n}XX^T\)</span></p>
+<blockquote>
+<p>This was just recalling and putting in the context to what is 
+about to happen now </p>
+</blockquote>
+<p>Let <span class="arithmatex">\(w_k\)</span> be the eigenvector corresponding to the <span class="arithmatex">\(k^{th}\)</span> largest eigenvalue 
+of <span class="arithmatex">\(C\)</span> (<span class="arithmatex">\(\lambda_k\)</span>).</p>
+<div class="arithmatex">\[\begin{equation*} 
+\begin{split}
+C w_k &amp;= \lambda_k w_k \\
+\left(\frac{1}{n} \sum_{i=1}^{n} x_ix_i^T \right) w_k &amp;= \lambda_k w_k \\
+w_k &amp;= \frac{1}{n \lambda_k} \sum_{i=1}^{n} (x_i^Tw_k)x_i \\
+w_k &amp;= \sum_{i=1}^{n} \left( \frac{x_i^Tw_k }{n \lambda_k} \right)x_i \\
+\end{split}
+\end{equation*} \tag{1} \label{Wk1}\]</div>
+<p>From this equation we can obeserve that <strong><span class="arithmatex">\(\mathbf{w_k}\)</span> is a linear combination of datapoints</strong>,
+assuming <span class="arithmatex">\(\lambda_k \neq 0\)</span>.</p>
+<div class="arithmatex">\[\implies w_k = X\alpha_k \tag{2} \label{Wk2}\]</div>
+<p>for some <span class="arithmatex">\(\alpha_k \in \mathbb{R}^n\)</span></p>
+<blockquote>
+<p>To find the value <span class="arithmatex">\(w_k\)</span> from the above equation , we need to know the value of <span class="arithmatex">\(\alpha_k\)</span></p>
+<p>But if we compare <span class="arithmatex">\(\eqref{Wk1}\)</span> and <span class="arithmatex">\(\eqref{Wk2}\)</span> we can see that , 
+<span class="arithmatex">\(\alpha_k = \sum_{i=1}^{n} \left( \frac{x_i^Tw_k }{n \lambda_k} \right)\)</span></p>
+<p>From the above equation , if we want to find <span class="arithmatex">\(\alpha_k\)</span> we need to know the 
+value <span class="arithmatex">\(w_k\)</span> itself. This is a chicken and egg problem,to solve this problem
+we will take a look at another equation.</p>
+</blockquote>
+<p>We know,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+w_k &amp;= X \alpha_k \;\;\;\;\;\;\;\;\; \forall k \\
+\\
+Cw_k &amp;= \lambda_k w_k \\
+\left( \frac{1}{n} XX^T \right)(X \alpha_k) &amp;= \lambda_k X \alpha_k \\
+\\
+\text{Premultiplying by} X^T \\
+\\
+X^T((XX^T) X \alpha_k) &amp;= X^T(n \lambda_k X \alpha_k) \\
+(X^TX)(X^TX)\alpha_k &amp;= n \lambda_k (X^TX) \alpha_k \\
+\\
+\text{Let} X^TX = K \\ 
+\\
+K^2 \alpha_k &amp;= n \lambda_k K \alpha_k \\ 
+\boxed{K \alpha_k = (n \lambda_k) \alpha_k} \\
+\end{split}
+\end{equation*}\]</div>
+<blockquote>
+<p>It is observed that for any <span class="arithmatex">\(\alpha_k\)</span> lets say <span class="arithmatex">\(u\)</span> which satisfies 
+this equation , there exists a scaled version of <span class="arithmatex">\(u\)</span> (Example <span class="arithmatex">\(4u\)</span>) which 
+also satisfies this equation.</p>
+<p>To prevent the possibilities of scaled values of <span class="arithmatex">\(\alpha_k\)</span> , we will 
+narrow down the possible values using the idea that length of <span class="arithmatex">\(w_k\)</span> is 1 i.e.
+<span class="arithmatex">\(||w_k|| = 1\)</span>.</p>
+</blockquote>
+<p>We know,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+w_k &amp;= X \alpha_k \\ 
+w_k^Tw_k &amp;= (X\alpha_k)^T(X\alpha_k) = \alpha_k^T (X^TX) \alpha_k \\
+&amp;\boxed{1 = \alpha_k^T K \alpha_k} \\
+\end{split}
+\end{equation*}\]</div>
+<p>Now we have 2 equations , which <span class="arithmatex">\(\alpha_k\)</span> must satisfy.</p>
+<blockquote>
+<p>Up until now , we wanted the eigenvectors of <span class="arithmatex">\(XX^T\)</span> which is <span class="arithmatex">\(d \times d\)</span> 
+matrix , but now we are saying we can solve the eigenequation of <span class="arithmatex">\(K\)</span> , where
+<span class="arithmatex">\(K = X^TX\)</span> which is a <span class="arithmatex">\(n \times n\)</span> matrix.</p>
+<p>But now the issue is , to get the value of <span class="arithmatex">\(K\)</span> in the 
+equation </p>
+<div class="arithmatex">\[K \alpha_k = (n \lambda_k) \alpha_k\]</div>
+<p>the value of <span class="arithmatex">\(\lambda_k\)</span> is required  , which we can only get when we 
+solve for <span class="arithmatex">\(XX^T\)</span> matrix. Back to square one 😭.</p>
+</blockquote>
+<p>Now to find <span class="arithmatex">\(\lambda_k\)</span> we will find a relation between eigenvalues of 
+<span class="arithmatex">\(XX^T\)</span> and <span class="arithmatex">\(X^TX\)</span>.</p>
+<div class="admonition success">
+<p><strong>Linear Algebra Fact</strong> :The non zero eigenvalues of <span class="arithmatex">\(XX^T\)</span> and <span class="arithmatex">\(X^TX\)</span> are exactly the same.</p>
+</div>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\text{For } C, \\
+C &amp;= \frac{1}{n} XX^T \hspace{1cm} &amp; \text{Eigenvectors} = \{w_1 , w_2 .... , w_n \} \hspace{1cm} &amp; \forall k , ||w_k||^2 = 1 \\ 
+&amp;&amp; \text{Eigenvalues} = \{ \lambda_1 \geq \lambda_2 \geq .... \geq \lambda_n \}  \\ 
+\\
+\\
+\text{For  } XX^T,
+\\
+XX^T &amp;= n \times C &amp; \text{Eigenvectors} = \{ w_1 , w_2 .... , w_l \}  \\
+&amp;&amp; \text{Eigenvalues} = \{ n\lambda_1 \geq n\lambda_2 \geq .... \geq n\lambda_l \}  \\ 
+\\
+\\
+\text{For } X^TX \\
+&amp;X^TX &amp; \text{Eigenvectors} = \{\beta_1 , \beta_2 , ..... \beta_l  \} \hspace{1cm} &amp;  \forall k, ||\beta_k||^2 = 1 \\
+&amp;&amp; \text{Eigenvalues} = \{ n\lambda_1 \geq n\lambda_2 \geq .... \geq n\lambda_l \}  \\ 
+\end{split}
+\end{equation*}\]</div>
+<blockquote>
+<p>Note that the eigenvalues of <span class="arithmatex">\(XX^T\)</span> are the same <span class="arithmatex">\(X^TX\)</span> from the 
+linear algebra fact.</p>
+</blockquote>
+<p>This gives us the final result as,</p>
+<div class="arithmatex">\[\boxed{K \beta_k = (n \lambda_k)\beta_k}\]</div>
+<blockquote>
+<p>Now we need to check if <span class="arithmatex">\(\beta_k = \alpha_k\)</span>?</p>
+</blockquote>
+<div class="arithmatex">\[\begin{equation*}
+\beta_k^T K \beta_k = \beta_k^T(n \lambda_k \beta_k) = n \lambda_k \beta_k^T\beta_k = \boxed{n \lambda_k}
+\end{equation*}\]</div>
+<p>Therefore,</p>
+<div class="arithmatex">\[\alpha_k = \frac{\beta_k}{\sqrt{n\lambda_k}} , \;\;\;\; \forall k \]</div>
+<p>The gist of this solution is that , when  <span class="arithmatex">\(d &gt;&gt; n\)</span>  we use the eigenvectors of 
+<span class="arithmatex">\(X^TX \in \mathbb{R}^{n \times n}\)</span> instead of <span class="arithmatex">\(XX^T \in \mathbb{R}^{d \times d}\)</span>
+which reduces the computation time required to get the eigenvectors.</p>
+<div class="admonition success">
+<p class="admonition-title">New Algorithm when <span class="arithmatex">\(d &gt;&gt; n\)</span></p>
+<ol>
+<li>Compute <span class="arithmatex">\(K = X^TX\)</span> , where  <span class="arithmatex">\(K \in \mathbb{R}^{n \times n}\)</span></li>
+<li>Compute the eigendecomposition of <span class="arithmatex">\(K\)</span> to get the eigenvectors and the 
+eigenvalues.</li>
+<li>Calculate for <span class="arithmatex">\(\alpha_k\)</span> , <span class="arithmatex">\(\alpha_k = \frac{\beta_k}{\sqrt{n \lambda_k}} \;\;\;\;\; \forall k\)</span></li>
+<li><span class="arithmatex">\(\boxed{w_k = X\alpha_k} \;\;\;\;\;\; \forall k\)</span></li>
+</ol>
+</div>
+<h2 id="non-linear-relationship-of-datapoints">Non-Linear Relationship of Datapoints</h2>
+<p>The issue of non-linear relationship arises when the datapoints 
+are related to each other in a "non-linear" way , it might be quadratic , cubic or 
+even biquadratic.</p>
+<p><img alt="" src="../img/MultipleBestFitLines.svg" /></p>
+<p>Now if the points of the dataset lie in a circle , determining the "best fit line"
+is pointless , almost all of the lines will be the best fit lines for this circle with
+a marginal difference of "reconstruction error" between them.</p>
+<p>The relation features of in this dataset can be represented using equation of a circle,</p>
+<div class="arithmatex">\[(f_1 - a)^2 + (f_2 - b)^2 = r^2\]</div>
+<blockquote>
+<p>We can see that this equation has quadratic terms which cannot be 
+represented linearly. To solve this problem , we will map it to function
+with more features in order to represent it linearly.</p>
+</blockquote>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\underset{\mathbb{R}^2}{[f_1 , f_2]} \xrightarrow{\phi} \overset{\phi(x)}{\underset{\mathbb{R}^6}{[1 , f_1^2 , f_2^2 , f_1 f_2 , f_1 , f_2]}} \\ 
+\\
+\text{Let } u \in \mathbb{R}^6  \hspace{1cm} [a^2 + b^2 - r^2 , 1 , 1, 0 , -2a , -2b] \\
+\end{split}
+\end{equation*}\]</div>
+<p>The function to map <span class="arithmatex">\([f_1 , f_2]\)</span> to <span class="arithmatex">\(\mathbb{R}^6\)</span> is called <span class="arithmatex">\(\phi\)</span> and <span class="arithmatex">\(u\)</span>
+is a point such that each datapoint of the original circular dataset satisfies,</p>
+<div class="arithmatex">\[\boxed{\phi(x)^Tw = 0}\]</div>
+<p>The equation above shows that the datapoints after mapping to <span class="arithmatex">\(\mathbb{R}^6\)</span>
+lie in a linear subspace.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Mapping <span class="arithmatex">\(d\)</span> features to a polynomial of power <span class="arithmatex">\(p\)</span> results in <span class="arithmatex">\(^{d+p} C_d\)</span> new features.</p>
+<p>In the above equation of circle , it can be see in that mapping 2 features (<span class="arithmatex">\(d\)</span>) 
+to a polynomial of degree 2 (<span class="arithmatex">\(p\)</span>), results in (<span class="arithmatex">\(^{2+2} C_2\)</span>) 6 features.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">How does this solve our problem of non linear datapoints?</p>
+<p>For a dataset <span class="arithmatex">\(S\)</span> , whose datapoints have a non-linear relationship (<span class="arithmatex">\(x_i \in \mathbb{R}^d\)</span>),
+we can map this dataset to a higher dimension (linear subspace), 
+such that after mapping , <span class="arithmatex">\(x_i \in \mathbb{R}^D\)</span>.</p>
+<p><strong>Note</strong> that <span class="arithmatex">\(D &gt; d\)</span></p>
+<p>As the points (after mapping to higher dimension) are in a linear subspace , our PCA algorithm 
+will work much better than before.</p>
+<p>Also note that , we already have a solution for the case when dimension of the datapoints is much 
+much larger than the number of datapoints (<span class="arithmatex">\(d &gt;&gt; n\)</span>). </p>
+</div>
+<h2 id="kernel-functions">Kernel Functions</h2>
+<div class="admonition failure">
+<p class="admonition-title">Issues with Calculating <span class="arithmatex">\(\phi(x)\)</span></p>
+<ul>
+<li>To run PCA on non-linear features , we came up with the solution of mapping (<span class="arithmatex">\(\phi(x)\)</span>) the 
+features to a higher dimension and then instead of calculating eigenvectors for a <span class="arithmatex">\(d \times d\)</span> 
+(Covariance) matrix , we calculated eigenvectors for <span class="arithmatex">\(n \times n\)</span> (<span class="arithmatex">\(X^TX\)</span>) if <span class="arithmatex">\(d &gt;&gt; n\)</span>.</li>
+<li>The issue with current implementation of PCA is that calculating <span class="arithmatex">\(\phi(x)\)</span> is nearly 
+the same number of calculations as <span class="arithmatex">\(O(d^p)\)</span>. <ul>
+<li>This means that as the power of the polynomial increases , the calculation of individual 
+features in the mapping <span class="arithmatex">\(\phi(x)\)</span> rises exponentially.</li>
+<li><strong>Example</strong>: If 2 features are mapped to a 20 power polynomial , the resulting number of 
+features will be nearly <span class="arithmatex">\(2^{20}\)</span> , which is simply too many calculations.</li>
+</ul>
+</li>
+<li>To solve this problem we will now take a look at Kernel Functions.</li>
+</ul>
+</div>
+<p>The eigendirections we compute (when mapping datapoints to a higher dimension) in PCA is of <span class="arithmatex">\(\phi(x)^T \phi(x)\)</span>.</p>
+<p><img alt="" src="../img/KernelFunctions.svg" /></p>
+<blockquote>
+<p>To get to <span class="arithmatex">\(K_{ij}\)</span> we first need to calculate <span class="arithmatex">\(\phi(x_i)^T \phi(x_j)\)</span> , but is there a way to directly go from 
+<span class="arithmatex">\(x_i \quad x_j\)</span> to <span class="arithmatex">\(K_{ij}\)</span> without computing <span class="arithmatex">\(\phi(x)\)</span> ?</p>
+</blockquote>
+<p>The function <span class="arithmatex">\((x^T x^{'} + 1)^2\)</span> is one such function through which we can directly get to  <span class="arithmatex">\(\phi(x)^T \phi(x^{'})\)</span>, 
+without having to compute <span class="arithmatex">\(\phi(x)\)</span> and <span class="arithmatex">\(\phi(x^{'})\)</span>.</p>
+<p>Lets say, <span class="arithmatex">\(x = [f_1 , f_2] \quad x^{'} = [g_1 , g_2]\)</span></p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+(x^T x^{'} + 1)^2 &amp;= \left( \begin{bmatrix}f_1 &amp; f_2 \end{bmatrix} \begin{bmatrix} g_1 \\ g_2 \end{bmatrix} + 1 \right)^2 \\
+&amp;= (f_1 g_1 + f_2 g_2 + 1)^2 \\ 
+&amp;= f_1^2 g_1^2 + f_2^2 g_2^2 + 1 + 2f_1 g_1 f_2 g_2 + 2f_1 g_1 + 2f_2 g_2 \\
+\end{split}
+\end{equation*}\]</div>
+<p>This can also be written as ,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+(x^T x^{'} + 1)^2 &amp;= \begin{bmatrix}f_1^2 &amp; f_2^2 &amp; 1 &amp; \sqrt{2}f_1 f_2 &amp; \sqrt{2}f_1 &amp; \sqrt{2}f_2 \end{bmatrix} 
+\begin{bmatrix}g_1^2 \\ g_2^2 \\ 1 \\ \sqrt{2}g_1 g_2 \\ \sqrt{2}g_1 \\ \sqrt{2}g_2 \end{bmatrix} \\
+&amp;= \phi(x)^T \phi(x^{'}) \\
+\\
+\text{where,}\\
+\\
+\phi(x) &amp;= \phi \left( \begin{bmatrix} a \\ b \end{bmatrix}\right) = \begin{bmatrix}a^2 \\ b^2 \\ 1 \\ \sqrt{2}a b \\ \sqrt{2}a \\ \sqrt{2}b \end{bmatrix} \\\end{split}
+\end{equation*}\]</div>
+<p>We can see that , to calculate <span class="arithmatex">\(\phi(x)^T \phi(x^{'})\)</span> we can instead solve for <span class="arithmatex">\((x^T x^{'} + 1)^2\)</span> and 
+skip the step for calculating <span class="arithmatex">\(\phi(x)\)</span> and <span class="arithmatex">\(\phi(x^{'})\)</span>.</p>
+<h3 id="valid-kernel-functions">Valid Kernel Functions</h3>
+<p>There are 2 ways to check if a function is a valid kernel function,</p>
+<ol>
+<li>There exists a mapping from <span class="arithmatex">\(\mathbb{R}^d\)</span> to <span class="arithmatex">\(\mathbb{R}\)</span> such that <span class="arithmatex">\(k(x , x^{'}) = \phi(x)^T \phi(x^{'})\)</span>.</li>
+<li>A kernel function is considered valid if ,<ul>
+<li><span class="arithmatex">\(k\)</span> is symmetric , i.e. , <span class="arithmatex">\(k(x , x^{'}) = k(x^{'} , x)\)</span></li>
+<li>The kernel matrix <span class="arithmatex">\(K\)</span> , where <span class="arithmatex">\(K_{ij} = k(x_i , x_j)\)</span> , is positive semi-definite.</li>
+</ul>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Common Kernel Functions</p>
+<ol>
+<li><strong>Polynomial Kernel</strong>: <span class="arithmatex">\(k(x , x^{'}) = (x^Tx^{'} + 1)^p\)</span></li>
+<li><strong>Gaussian Kernel</strong>: <span class="arithmatex">\(k(x , x^{'}) = \exp \left( - \frac{|| x - x^{'}||^2}{2 \sigma^2} \right)\)</span> , for some <span class="arithmatex">\(\sigma &gt; 0\)</span>.<ul>
+<li><span class="arithmatex">\(\phi(x)\)</span> in this case is mapped to infinite dimension.</li>
+</ul>
+</li>
+</ol>
+</div>
+<h2 id="kenrel-pca">Kenrel PCA</h2>
+<p>Now we need everything that is required to perform Kernel PCA on a non-linear dataset , lets put down an 
+algorithm for Kernel PCA.</p>
+<ul>
+<li>Input <span class="arithmatex">\(\{x_1 , x_2 , \cdots , x_n \}\)</span> <span class="arithmatex">\(x_i \in \mathbb{R}^d\)</span> , kernel <span class="arithmatex">\(k : \mathbb{R}^d \times \mathbb{R}^d \to \mathbb{R}\)</span></li>
+<li>Compute <span class="arithmatex">\(K \in \mathbb{R}^{n \times n}\)</span> where <span class="arithmatex">\(K_{ij} = k(x_i,x_j) \quad \forall i,j\)</span></li>
+<li>Center the kernel using,</li>
+</ul>
+<div class="arithmatex">\[K^C = K - IK - KI + IKI\]</div>
+<p>where <span class="arithmatex">\(K^C\)</span> is the centered kernel and <span class="arithmatex">\(I \in \mathbb{R}^{n \times n}\)</span> is a matrix with all elements equal to <span class="arithmatex">\(\frac{1}{n}\)</span></p>
+<ul>
+<li>Compute <span class="arithmatex">\(\beta_1 , \beta_2 , \cdots , \beta_l\)</span> eigenvectors and <span class="arithmatex">\(n\lambda_1 , n\lambda_2 , \cdots , n\lambda_l\)</span> eigenvectors of K
+and normalize to get <span class="arithmatex">\(\alpha_k = \frac{\beta_k}{\sqrt{n \lambda_k}}\)</span></li>
+<li>Compute the compressed representation using,</li>
+</ul>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\phi(x_i)^T w_k &amp;= \phi(x_j)^T \left( \sum_{j=1}^n \phi(x_i) \alpha_{kj} \right) \\
+&amp;= \sum_{j=1}^n \alpha_{kj} \phi(x_i)^T \phi(x_j) \\
+&amp;= \sum_{j=1}^n \alpha_{kj} K_{ij} \\
+\end{split}
+\end{equation*}\]</div>
+<ul>
+<li>Compute <span class="arithmatex">\(\sum_{j=1}^n \alpha_{kj} K_{ij} \quad \forall k\)</span></li>
+</ul>
+<div class="arithmatex">\[\phi(\mathbf{x}_i)^T\mathbf{w} \in \mathbb{R}^{d} \to
+\left [
+\begin{array}{cccc}
+\displaystyle \sum_{j=1}^{n} \alpha_{1j} \mathbf{K}^C_{ij} &amp; \displaystyle \sum_{j=1}^{n} \alpha_{2j} \mathbf{K}^C_{ij} &amp; \ldots &amp; \displaystyle \sum_{j=1}^{n} \alpha_{nj} \mathbf{K}^C_{ij}
+\end{array}
+\right ]\]</div></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

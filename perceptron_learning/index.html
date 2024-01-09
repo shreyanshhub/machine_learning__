@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Logistic Regression - Machine Learning Theory</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <link href="../stylesheets/extra.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Machine Learning Theory</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Machine Learning Theory</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM/" class="nav-link">Support Vector Machine</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM2/" class="nav-link">SVM2</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Types%20of%20Models/" class="nav-link">Types of Models</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../classification/" class="nav-link">Classification</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../clustering/" class="nav-link">Clustering</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../estimation/" class="nav-link">Estimation</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../kernel_pca/" class="nav-link">Kernel PCA</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../pca/" class="nav-link">Principal Component Analysis (PCA)</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">Logistic Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../regression/" class="nav-link">Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../supervised_learning/" class="nav-link">Supervised Learning</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Img <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../img/Representation%20Learning/" class="dropdown-item">Principal Component Analysis (PCA)</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../pca/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../regression/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#logistic-regression" class="nav-link">Logistic Regression</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#introduction" class="nav-link">Introduction</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#understanding-perceptron-update-rule" class="nav-link">Understanding Perceptron Update Rule</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#proof-of-convergence-of-perceptron-algorithm" class="nav-link">Proof of Convergence of Perceptron Algorithm</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#sigmoid-function-for-modeling-class-probabilities" class="nav-link">Sigmoid Function for Modeling Class Probabilities</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#logistic-regression_1" class="nav-link">Logistic Regression</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="logistic-regression">Logistic Regression</h1>
+<h2 id="introduction">Introduction</h2>
+<p>Our goal in this week is to discover discriminative models which can be 
+used for classification.</p>
+<p>We want to create a discriminative model for <span class="arithmatex">\(P(y=1|x)\)</span> and the simplest 
+model that one can think of is a linear classification model.</p>
+<div class="arithmatex">\[\begin{equation*}
+P(y=1|x) = 
+\begin{cases}
+1 &amp; \text{for } w^Tx \geq 0 \\
+0 &amp; \text{otherwise}
+\end{cases}
+\end{equation*}\]</div>
+<blockquote>
+<p>In generative model we looked at how <span class="arithmatex">\(x\)</span> was generated , but for a 
+discriminative model we only care about how <span class="arithmatex">\(y|x\)</span> is generated.</p>
+</blockquote>
+<h3 id="linear-separatability-assumption">Linear Separatability Assumption</h3>
+<p>For our above linear model to be able to classify datapoints , 
+the datapoints must have either label 1 or label -1. 
+This means there should be no  outliers in a dataset and all 
+the points should belong to either side of <span class="arithmatex">\(w^Tx = 0\)</span> (Linear Separator).</p>
+<figure>
+<p><img alt="" src="../img/AllowedDataset.svg" />
+  </p>
+<figcaption> Here the data is linearly separable , there are no outliers in 
+  this dataset.</figcaption>
+</figure>
+<figure>
+<p><img alt="" src="../img/NotAllowedDataset.svg" />
+  </p>
+<figcaption>This dataset is not allowed because there are 
+  outliers and hence the dataset is not linearly spearabale.</figcaption>
+</figure>
+<blockquote>
+<p>If the "Not Allowed Dataset" is given to us then our assumption would be that 
+the <em>labeler</em> used some <span class="arithmatex">\(w\)</span> which correctly classified all the datapoints , but
+according to our current model such datasets are not possible. Hence we say that
+this dataset is not allowed under our model.</p>
+<p>When we make strong assumptions like linear separatability of the dataset,
+we hope to build fast and efficient algorithms, but do such algorithms really
+exist? The short answer is Yes.</p>
+</blockquote>
+<p>Our goal here was to get a discriminative model for classification which minimizes 
+the zero-one loss over a dataset.</p>
+<div class="arithmatex">\[\underset{h \in \mathcal{H}}{\min} \sum_{i=1}^n \mathbb{1}( h(x_i) \neq y_i )\]</div>
+<p>For a general dataset this is an NP-HARD problem even if <span class="arithmatex">\(\mathcal{H}\)</span> is considered 
+to be linear.</p>
+<p>Now if we get back to our "Linear Separatability Assumption" , then the loss for 
+our algorithm will be 0 (on the training dataset) as it will be able to correctly 
+classify all the datapoints because there are no outliers present.</p>
+<div class="arithmatex">\[\exists w \in \mathbb{R}^d \text{  s.t.  } \text{sign}(w^Tx) =y_i \forall i \in [n]\]</div>
+<blockquote>
+<p>There exists a <span class="arithmatex">\(w\)</span> such that sign(<span class="arithmatex">\(w^Tx\)</span>) = <span class="arithmatex">\(y_i\)</span> (we make the correct prediction) for 
+all the <span class="arithmatex">\(i\)</span> (datapoints) in <span class="arithmatex">\([n]\)</span> (dataset)</p>
+</blockquote>
+<h3 id="perceptron-algorithm">Perceptron Algorithm</h3>
+<p>The Input for this algorithm is <span class="arithmatex">\(\{ (x_1,y_1) , (x_2,y_2) , ... (x_n,y_n) \}\)</span> where 
+<span class="arithmatex">\(x_i \in \mathbb{R}^d\)</span> and <span class="arithmatex">\(y_i \in \{+1,-1 \}\)</span>.</p>
+<p>The algorithm is trying to find a <span class="arithmatex">\(w\)</span> that correctly classifies all the datapoints,
+if such a <span class="arithmatex">\(w\)</span> exists.</p>
+<p>This algorithm is an <strong>iterative algorithm</strong> and it starts with a <span class="arithmatex">\(w^0\)</span> , where <span class="arithmatex">\(0\)</span>
+indicates the iteration number and initially <span class="arithmatex">\(w^0 = [0,0,0,...0]\)</span> i.e. <span class="arithmatex">\(w^0\)</span> is a
+zero vector.</p>
+<p><strong>Until Convergence</strong></p>
+<div class="arithmatex">\[\begin{align}
+&amp; \text{Pick } (x_i, y_i) \text{ pair from the dataset}\\
+&amp; \text{If sign}(w^Tx_i) = y_i \\
+\\
+&amp; \quad \text{Do nothing} \\
+\\
+&amp; \text{else}\\
+\\
+&amp; \quad \boxed{w^{t+1} = w^t + x_i y_i} \\
+\\
+&amp; \text{end}
+\\
+\end{align}\]</div>
+<p>Basically , we check if our current <span class="arithmatex">\(w\)</span> predicts the datapoint correctly , if it 
+doesnt predict the datapoint correctly then we multiply the datapoint with its label
+(+1 or -1) and add this product to our current <span class="arithmatex">\(w\)</span> until convergence.</p>
+<p>Also note that the <strong>update rule</strong> here is the boxed equation,</p>
+<div class="arithmatex">\[ \boxed{w^{t+1} = w^t + x_i y_i} \]</div>
+<h2 id="understanding-perceptron-update-rule">Understanding Perceptron Update Rule</h2>
+<p>In our current perceptron algorithm , two types of mistakes can happen</p>
+<div class="admonition failure">
+<p class="admonition-title">Mistake Type 1</p>
+<ul>
+<li>Predicted Label = +1 (sign <span class="arithmatex">\((w^Tx_i) \geq 0\)</span>)</li>
+<li>Actual Label = -1 (<span class="arithmatex">\(y_i\)</span> = -1)</li>
+</ul>
+</div>
+<div class="admonition failure">
+<p class="admonition-title">Mistake Type 2</p>
+<ul>
+<li>Predicted Label = -1 (sign <span class="arithmatex">\((w^Tx_i) &lt; 0\)</span>)</li>
+<li>Actual Label = +1 (<span class="arithmatex">\(y_i\)</span> = +1)</li>
+</ul>
+</div>
+<blockquote>
+<p>When we encounter a mistake , we either make a mistake in prediction 
+of Type 1 Category or Type 2 Category and then we update <span class="arithmatex">\(w\)</span> accordingly.
+A general question to ask here would be , we have updated our <span class="arithmatex">\(w\)</span> on some
+datapoint at <span class="arithmatex">\(t^\text{th}\)</span> iteration, but how does this <span class="arithmatex">\(w^{t+1}\)</span> 
+(<span class="arithmatex">\(w^t\)</span> after update) perform on the point where we made the mistake?</p>
+</blockquote>
+<p>We know that,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+w^{t+1} &amp;= w^t + x_i y_i \\
+\\
+\text{Multiplying both sides by } x_i \\
+\\
+(w^{t+1})^T x_i &amp;= (w^t + x_i y_i)^T x_i \\
+&amp;= w^{t^T} x_i + y_i ||x_i||^2 \\
+\end{split}
+\end{equation*}\]</div>
+<blockquote>
+<p>Lets assume that a mistake of Type 1 occurs.</p>
+</blockquote>
+<div class="arithmatex">\[ (w^{t+1})^T x_i = \underbrace{w^{t^T} x_i}_{\geq 0} + \underbrace{\underbrace{y_i}_{-1} \underbrace{||x_i||^2}_{\geq 0}}_{\text{Negative}}\]</div>
+<p>Here <span class="arithmatex">\(y_i = -1\)</span> represents the "actual" label of <span class="arithmatex">\(x_i\)</span>,</p>
+<ul>
+<li><span class="arithmatex">\(||x_i||^2\)</span> will always be positive because it is squared.</li>
+<li>The product of <span class="arithmatex">\(y_i\)</span> and <span class="arithmatex">\(||x_i||^2\)</span> will be less than zero (negative).</li>
+</ul>
+<blockquote>
+<p>Now what does all this mean?</p>
+</blockquote>
+<p>In a Type 1 Mistake , we predicted the label to be positive (+1) because our 
+<span class="arithmatex">\(w^T x_i \geq 0\)</span> , but it should have been negative (as the actual label is -1).
+We can see that the product of <span class="arithmatex">\(y_i\)</span> and <span class="arithmatex">\(||x_i||^2\)</span> will be negative and will 
+get subtracted from <span class="arithmatex">\(w^{t^T} x_i\)</span> which will shift the <span class="arithmatex">\(w\)</span> towards the negative 
+direction. </p>
+<p>This doesnt mean that <span class="arithmatex">\(w\)</span> will immediately give a negative dot product
+just after this iteration (where we made the Type 1 Mistake) but <strong>it does moves/shifts 
+the <span class="arithmatex">\(w\)</span> to the correct direction.</strong></p>
+<p><strong>Conclusion</strong> : Update rule pushes <span class="arithmatex">\(w\)</span> in the right direction.</p>
+<blockquote>
+<p>The update of <span class="arithmatex">\(w\)</span> we discussed fixes the prediction for the "current" datapoint,
+but does it affect the prediction of previous datapoints (which was predicted 
+correctly )? In on overall sense , does our current algorithm give use the best <span class="arithmatex">\(w\)</span>?</p>
+</blockquote>
+<h3 id="redifining-linear-separatability">Redifining Linear Separatability</h3>
+<div class="admonition info">
+<p class="admonition-title">Case 1</p>
+<p><img alt="" src="../img/Updating_w.svg" /></p>
+<p>Here we can see that updating <span class="arithmatex">\(w\)</span> for a point <span class="arithmatex">\(x\)</span> leads to misclassification of 
+some datapoints which were correctly classified before.</p>
+<div class="admonition info">
+<p class="admonition-title">Animation</p>
+<p><video width="800" style="filter: none;" controls>
+    <source src="../videos/PerceptronAlgorithm.mp4" type="video/mp4">
+</video></p>
+<ul>
+<li>It can be seen that at the end when the new weight vector (yellow)
+is created , it misclassifies the circled points , which were correctly
+classified by the old weight vector (white).</li>
+</ul>
+</div>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Case 2</p>
+<p><img alt="" src="../img/Updating_w_2.png" /></p>
+</div>
+<blockquote>
+<p>Is this data linearly separable?</p>
+</blockquote>
+<p>At first glance this dataset might look linearly separable , but in according to 
+our current algorithm <strong>this dataset is not linearly separable</strong>.</p>
+<blockquote>
+<p>How? Why?</p>
+</blockquote>
+<p>One might say that <span class="arithmatex">\(w\)</span> lying on x-axis (below diagram) separates the dataset.</p>
+<p><img alt="" src="../img/Updating_w_2_2.svg" /></p>
+<p>Now lets see how the perceptron algorithm work on this dataset.</p>
+<div class="admonition abstract">
+<p class="admonition-title">Iteration 1</p>
+<p>Initially <span class="arithmatex">\(w^0 = [0,0]\)</span> </p>
+<p><span class="arithmatex">\(\large{\substack{w^{0^T}x_1 = 0 \\ \hat{y} = +1}, \;\; \substack{w^{0^T}x_2 = 0 \\ \hat{y} = +1}, \;\; \boxed{\substack{w^{0^T}x_3 = 0 \\ \hat{y} = +1}}}\)</span></p>
+</div>
+<div class="admonition abstract">
+<p class="admonition-title">Iteration 2</p>
+<p>Our algorithm made a mistake in prediciton of the third (boxed) datapoint.
+Now we will update <span class="arithmatex">\(w\)</span> as a mistake in prediciton occured,</p>
+<p><span class="arithmatex">\(w^1 = w^0 + x_3 y_3 = \begin{bmatrix} 1 \\ -1/2 \end{bmatrix}\)</span></p>
+<p>After updating <span class="arithmatex">\(w\)</span> we again run the algorithm,</p>
+<p><span class="arithmatex">\(\large{\boxed{\substack{w^{1^T}x_1 = -0.5 \\ \hat{y} = -1}}, \;\; \substack{w^{1^T}x_2 = 0.5 \\ \hat{y} = +1}, \;\; \substack{w^{1^T}x_3 = -1.25 \\ \hat{y} = -1}}\)</span></p>
+</div>
+<div class="admonition abstract">
+<p class="admonition-title">Iteration 3</p>
+<p>Our algorithm made a mistake in prediciton of the third (boxed) datapoint.
+Now we will update <span class="arithmatex">\(w\)</span> as a mistake in prediciton occured,</p>
+<p><span class="arithmatex">\(w^2 = w^1 + x_1 y_1 = \begin{bmatrix} 1 \\ 1/2 \end{bmatrix}\)</span></p>
+<p><span class="arithmatex">\(\large{\substack{w^{1^T}x_1 = 0.5 \\ \hat{y} = +1}, \;\; \boxed{\substack{w^{1^T}x_2 = -0.5 \\ \hat{y} = -1}}, \;\; \substack{w^{1^T}x_3 = -0.75 \\ \hat{y} = -1}}\)</span></p>
+</div>
+<div class="admonition abstract">
+<p class="admonition-title">Iteration 4</p>
+<p>Our algorithm made a mistake in prediciton of the second (boxed) datapoint.
+Now we will update <span class="arithmatex">\(w\)</span> as a mistake in prediciton occured,</p>
+<p><span class="arithmatex">\(w^3 = w^0 + x_2 y_2 = \begin{bmatrix} 1 \\ -1/2 \end{bmatrix}\)</span></p>
+<p>We can see that this <span class="arithmatex">\(w^3\)</span> is the same as <span class="arithmatex">\(w^1\)</span> , which means if we go ahead with
+this iteration we run into again predict the second datapoint wrong and hence
+the loop will keep on running without stopping. At the end , our perceptron 
+algorithm will never give us a <span class="arithmatex">\(w\)</span> which classifies all the points correctly 
+and the algorithm will never converge.</p>
+</div>
+<p><strong>In such an edge case , there exists no <span class="arithmatex">\(w\)</span> which will correctly classify all 
+the datapoints , even though , at first the dataset may look linearly separable</strong></p>
+<div class="admonition info">
+<p class="admonition-title">Animation</p>
+<p><video width="800" style="filter: none;" controls>
+    <source src="../videos/PerceptronAlgorithm2.mp4" type="video/mp4">
+</video></p>
+<ul>
+<li>In each iteration the incorrectly predicted point is highlighted 
+in yellow color.</li>
+<li>Points on the right side of the Decision Boundry are predicted as +1 (positive),
+while points on the left side are predicted as -1 (negative)</li>
+<li>Even after several iterations it can be seen that the weight vector keeps going
+back and forth between <code>w=[1,0.5]</code> and <code>w=[1,-0.5]</code>.</li>
+<li>Hence we can see that the algorithm will never converge.</li>
+</ul>
+</div>
+<blockquote>
+<p>Why does this happen?</p>
+</blockquote>
+<p>One of the reasons is , the given dataset is not strictly linearly separable 
+as some of the datapoints lie on the decision boundry itself and we chose to 
+label such datapoints as +1 , though they can also be labeled as -1.</p>
+<blockquote>
+<p>What to do to solve this issue?</p>
+</blockquote>
+<p>We can apply more stricter "assumptions" on our dataset to account for the 
+edge case described above.</p>
+<p><img alt="" src="../img/GammaMargin.svg" /></p>
+<p>A dataset is linearly separable with <span class="arithmatex">\(\gamma\)</span> margin if,</p>
+<p><span class="arithmatex">\(\exists w^* \in \mathbb{R}^d \quad \text{s.t. } \quad (w^{*^T}x_i)y_i \geq \gamma \forall i \quad \text{for some } \gamma &gt; 0\)</span></p>
+<p>(There exists a <span class="arithmatex">\(w^*\)</span> such that <span class="arithmatex">\((w^{*^T}x_i) y_i \geq \gamma\)</span> for all the datapoints where <span class="arithmatex">\(\gamma &gt; 0\)</span>)</p>
+<p>This assumption makes it so that there are no datapoints between the parallel 
+dotted lines , in other words , this also means that no points will lie on 
+<span class="arithmatex">\(w^T x = 0\)</span></p>
+<h2 id="proof-of-convergence-of-perceptron-algorithm">Proof of Convergence of Perceptron Algorithm</h2>
+<p>To prove the convergence of the algorithm we are going to make a few 
+assumptions about the dataset</p>
+<ol>
+<li>Linear Separatability with <span class="arithmatex">\(\gamma\)</span> margin.</li>
+<li>
+<p>Radius Assumption </p>
+<ul>
+<li><span class="arithmatex">\(\forall i \in D \quad ||x_i||_2 \leq R \quad \text{for some } R &gt; 0\)</span></li>
+<li>This basically means that all the points in dataset <span class="arithmatex">\(D\)</span> fall within a 
+circle of radius <span class="arithmatex">\(R\)</span>.</li>
+</ul>
+</li>
+<li>
+<p>Without loss of generality , assume <span class="arithmatex">\(||w^*|| = 1\)</span></p>
+<ul>
+<li>This basically means that we have normalized our <span class="arithmatex">\(w\)</span> get <span class="arithmatex">\(w^*\)</span>.</li>
+</ul>
+</li>
+</ol>
+<p>We will now try to quantify the number of mistakes our aglorithm can make ,
+if the number of mistakes is finite then it means the number of iterations 
+is also finite , therefore , our algorithm must converge.  </p>
+<h3 id="analysis-of-mistakes-of-perceptron-algorithm">Analysis of 'Mistakes' of Perceptron Algorithm</h3>
+<ul>
+<li>
+<p>Observe that an update in perceptron algorithm only happens when a 
+mistake occurs.</p>
+</li>
+<li>
+<p>Say <span class="arithmatex">\(w^l\)</span> is the current guess and a mistake happens w.r.t (x,y).</p>
+</li>
+</ul>
+<h4 id="bound-1">Bound 1</h4>
+<blockquote>
+<p>Now we will take look at what happens to the length of <span class="arithmatex">\(w\)</span> after an
+update</p>
+</blockquote>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+w^l &amp;= w^{l-1} + xy \\
+||w^l||^2 &amp;= ||w^{l-1} + xy||^2 \\
+&amp;= (w^{l-1} + xy)^T (w^{l-1} + xy) \\ 
+&amp;= \underbrace{||w^{l-1}||^2}_{\geq 0} + \underbrace{2(w^{{l-1}^T} x)y}_{\leq 0} + \underbrace{||x||^2 \underbrace{y^2}_{\pm1}}_{\leq R^2} \\
+\\
+\therefore ||w^l||^2 &amp;\leq ||w^{l-1}||^2 + R^2 \\
+&amp;\leq (||w^{l-2}||^2 +R^2 ) + R^2 \\ 
+&amp;\vdots \\
+&amp;\leq ||w^0||^2 + l R^2 \\
+\\
+\boxed{\therefore ||w^l||^2 \leq l R^2} \\ 
+\end{split}
+\end{equation*}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li>The reason why <span class="arithmatex">\(y^2\)</span> is always greater than zero because it is this label of 
+of the datapoints and can only take value of either +1 or -1.</li>
+<li>||w||^2 will also be always greater than or equal to zero as square of any real
+number is always a positive number (<span class="arithmatex">\(w\)</span> is just a vector comprising of real numbers)</li>
+<li>Product of <span class="arithmatex">\(||x||^2\)</span> and <span class="arithmatex">\(y^2\)</span> will always be less than or equal to <span class="arithmatex">\(R^2\)</span> because
+as per our assumption , all the points lie within a circl of radius <span class="arithmatex">\(R\)</span>.</li>
+<li><span class="arithmatex">\(2(w^{{l-1}^T} x) y\)</span> will always be less than one because an update only happens 
+when a mistake occurs,<ul>
+<li>If actual label is +1 and predicted label is -1 , this implies <span class="arithmatex">\(w^T x &lt; 0\)</span> i.e.
+its a negative value and the (actual) label is a positive value , product of 
+negative and positive values is always negative.</li>
+<li>Similarly , if actual label is -1 and predicted label is +1, this implies <span class="arithmatex">\(w^T x \geq 0\)</span> 
+i.e its a positive value and the (actual) label is a negative value , product of 
+positive and negative values is always negative.</li>
+</ul>
+</li>
+</ul>
+</div>
+<h4 id="bound-2">Bound 2</h4>
+<p>We will now use <span class="arithmatex">\(w^*\)</span> (the best <span class="arithmatex">\(w\)</span> which exists) to obtain another bound for 
+number of mistakes.</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+w^l &amp;= w^{l-1} + x y \\ 
+(w^l)^T w^* &amp;= (w^{l-1} + xy)^T w^* \\
+&amp;= w^{{l-1}^T} w^* + \underbrace{(w^{*^T} x)y}_{\geq \gamma} \\ 
+\\
+\therefore (w^l)^T w^* &amp;\geq (w^{l-1})^T w^* + \gamma \\
+&amp; \geq (w^{{l-2}^T} w^* + \gamma) + \gamma \\
+&amp; \vdots \\
+&amp; \geq \underbrace{(w^0)^T w^*}_{0} + l \gamma \\ 
+\\
+\therefore (w^l)^T w^* &amp;\geq l \gamma \\
+\\
+((w^l)^T w^*)^2 &amp;\geq l^2 \gamma^2 \\
+\\ 
+||w^l||^2 \underbrace{||w^*||^2}_{1} &amp;\geq l^2 \gamma^2 \text{ Using Cauchy-Schwarz Inequality }  \\
+\boxed {\therefore ||w^l||^2 \geq l^2 \gamma^2}
+\end{split}
+\end{equation*}\]</div>
+<div class="admonition abstract">
+<p class="admonition-title">Cauchy-Schwarz Inequaltiy</p>
+<p>We know that,</p>
+<div class="arithmatex">\[ -1 \leq \cos(\theta) \leq 1 \]</div>
+<p>Multiplying the product of norm of some vectors <span class="arithmatex">\(v\)</span> and <span class="arithmatex">\(w\)</span> in
+the above equation,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+-||v|| \times ||w|| \leq ||v|| &amp;\times ||w|| \cos(\theta) \leq ||v|| \times ||w|| \\
+-||v|| \times ||w|| \leq v &amp;\cdot w  \leq ||v|| \times ||w|| \\
+|v \cdot w| &amp;\leq ||v|| \times ||w||
+\end{split}
+\end{equation*}\]</div>
+<p><strong>Note</strong> : Dot product of any 2 vectors is given by <span class="arithmatex">\(x \cdot y = ||x|| \times ||y|| \cos(\theta)\)</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li>In the above assumptions we said that norm of <span class="arithmatex">\(w^*\)</span> is 1.</li>
+</ul>
+</div>
+<h4 id="radius-margin-bound">Radius Margin Bound</h4>
+<p>Now that we have both upper and lower bound of <span class="arithmatex">\(||w^l||\)</span>,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+l^2 \gamma^2 &amp;\leq ||w^l||^2 \leq l R^2 \\
+l^2 \gamma^2 &amp;\leq l R^2 \\
+\therefore l &amp;\leq \frac{R^2}{\gamma^2}\\
+\end{split}
+\end{equation*}\]</div>
+<p><strong>Conclusion</strong>: A dataset which follows all the assumptions above , its mistakes 
+are always less than or equal to Radius in which all the datapoints lie divided by 
+the margin gamma with respect to the optimal <span class="arithmatex">\(w^*\)</span>.</p>
+<blockquote>
+<p>As the number of mistakes now can be quantified , we can say that this perceptron 
+algorithm will converge.</p>
+</blockquote>
+<h2 id="sigmoid-function-for-modeling-class-probabilities">Sigmoid Function for Modeling Class Probabilities</h2>
+<p>We know that Perceptron Algorithm makes a linear separatability assumption , 
+if we were to write that in probabilistic manner , then one way to do that 
+would be,</p>
+<div class="arithmatex">\[\begin{equation*}
+P(y=1|x) =
+\begin{cases}
+1 &amp; \text{if } w^T x \geq 0 \\
+0 &amp; \text{otherwise}
+\end{cases}
+\end{equation*}\]</div>
+<p>As the probabilities of the are 1 and 0 for a given datapoint , the perceptron 
+algorithm only works on linearly separable datasets. </p>
+<p>If the <a href="#linear-separatability-assumption">dataset</a> has points which are not linearly separable but appear to be outliers,
+our perceptron algorithm is unable to run on such a dataset.</p>
+<blockquote>
+<p>Can we somehow relax the probabilities for a given datapoint? 
+So that the perceptron algorithm also works on datasets which are not linearly 
+separable.</p>
+</blockquote>
+<h3 id="simple-linear-probabilistic-model">Simple Linear Probabilistic Model</h3>
+<p>We will now start building up to a reasonable algorithm which has realaxed probabilities.
+We will start with a simple linear model where the score (<span class="arithmatex">\(z\)</span>) of a datapoint is 
+given by <span class="arithmatex">\(z = w^T x\)</span>. </p>
+<p><img alt="" src="../img/ScoreModel.svg" /></p>
+<p>We are going to allow any point to be labeled as +1 or -1 , but the deciding factor
+for which label will +1 or -1 will be based on the score (<span class="arithmatex">\(z\)</span>) of the datapoint.
+The higher the score of a label is , the higher will be its probability of being 
+labeled as +1 , similarly the lower the score of the datapoint is , the higher
+will be its probability of being labeled as -1.</p>
+<blockquote>
+<p>An intuitive way to think about this would be that , <span class="arithmatex">\(x_2\)</span> is farther away from the
+decision boundry/linear separator , hence we're more confident that <span class="arithmatex">\(x_2\)</span> should be 
+labeled as +1 when compared to <span class="arithmatex">\(x_1\)</span> which is much much closer to the decision boundry.</p>
+</blockquote>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>In the above diagram , </p>
+<ul>
+<li>
+<p><span class="arithmatex">\(x_1\)</span> will have a lower score when compared to <span class="arithmatex">\(x_2\)</span> (<span class="arithmatex">\(w^T x_1 &lt; w^T x_2\)</span>),
+this means that probability of <span class="arithmatex">\(x_1\)</span> being labeled as +1 is lower than 
+probability of <span class="arithmatex">\(x_2\)</span> being labeled as +1 (<span class="arithmatex">\(P(y = 1 | x_1) &lt; P(y = 1 | x_2)\)</span>).</p>
+</li>
+<li>
+<p>Similarly , <span class="arithmatex">\(x_4\)</span> is farther away than <span class="arithmatex">\(x_3\)</span> , which means that <span class="arithmatex">\(x_4\)</span> has 
+higher probability of being labeled as -1 when compared to <span class="arithmatex">\(x_3\)</span> 
+( <span class="arithmatex">\(P(y = -1 | x_3) &lt; P(y = -1 | x_4)\)</span>).</p>
+</li>
+</ul>
+</div>
+<p>According to this simple linear model , <strong>every point has the probability to be 
+labeled as +1 or -1 , just the chance that it gets labeled (+1 or -1) depends on
+how far it is form the decision boundry.</strong> </p>
+<div class="admonition failure">
+<p class="admonition-title">Problems With Current Linear Model</p>
+<p>We can calculate the score for any datapoint given a <span class="arithmatex">\(w\)</span> but we dont have 
+function/method to convert this score to a probability.</p>
+</div>
+<p>To convert the score to a probability will use the Sigmoid Function.</p>
+<p><img alt="abcd" src="../img/Sigmoid.svg" /></p>
+<p>This function goes from <span class="arithmatex">\(0 \to 1\)</span> over the domain of <span class="arithmatex">\((-\infty , \infty)\)</span> and 
+is given by <span class="arithmatex">\(g(z) = \frac{1}{1 + e^{-z}}\)</span>.
+Here , <span class="arithmatex">\(z = w^T x\)</span>.</p>
+<p><strong>Hence, with sigmoid function we define probabilities of a datapoint being 
+labeled as +1 or -1 which means datasets which were previously
+<a href="#linear-separatability-assumption">not allowed</a> are now allowed for our 
+Probabilistic Perceptron Algorithm.</strong></p>
+<h2 id="logistic-regression_1">Logistic Regression</h2>
+<p>We have developed Probabilistic Perceptron Algorithm , which labels datapoints 
+on certain score (z) , but the problem with our current approach is that there may 
+exist many <span class="arithmatex">\(w\)</span> which correctly classify the datapoints. We dont have any method to 
+identify the best <span class="arithmatex">\(w\)</span> among all the <span class="arithmatex">\(w\)</span>'s which classify the datapoints.</p>
+<p><img alt="" src="../img/Two_Ws.svg" /></p>
+<p>Here <span class="arithmatex">\(w_1\)</span> and <span class="arithmatex">\(w_2\)</span> both will be able to classify the datapoints , but which amongst
+them is a better <span class="arithmatex">\(w\)</span>?</p>
+<p>This seems to be problem of maximum liklihood which can be solved using using the
+traditional method of derivative of log-likelihood.</p>
+<p>For a dataset <span class="arithmatex">\(D = \{(x_1 , y_1) , (x_2 , y_2) , ... (x_n , y_n) \}\)</span>, where <span class="arithmatex">\(x_i \in \mathbb{R}^d\)</span>
+and <span class="arithmatex">\(y_i \in \{-1 , 1 \}\)</span></p>
+<p>We know that,</p>
+<div class="arithmatex">\[ P(y=1|x) = g(w^T x_i) = \frac{1}{1 + e^{- w^T x}} \]</div>
+<p>The maximum likelihood expression will be,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\mathcal{L}(w;D) &amp;= \prod_{i=1}^n (g(w^T x_i))^{y_i} (1 - g(w^T x_i))^{1 - y_i} \\ 
+\log( \mathcal{L}(w;D) ) &amp;= \sum_{i=1}^{n} y_i \log(g(w^T x_i)) + (1 - y_i) \log(1 - g(w^T x_i)) \\
+&amp;= \sum_{i=1}^{n} y_i \log (\frac{1}{1 + e^{-w^T x_i}}) + (1 - y_i) \log (\frac{e^{-w^T x_i}}{1 + w^{-w^T x_i}}) \\
+&amp;= \sum_{i=1}^{n} [(1 - y_i)(-w^T x_i) -log(1 + e^{-w^T x_i})] \\
+\end{split}
+\end{equation*}\]</div>
+<details class="note">
+<summary>Note</summary>
+<ul>
+<li>Our assumption here is the probabilities are generated independent of other labels.</li>
+<li>The above Maximum Likelihood is very similar to Maximal Likelihood of a bernoulli 
+random variable.</li>
+</ul>
+</details>
+<p>Our goal now is maximize the above equation with respect to <span class="arithmatex">\(w\)</span> , so that we get the 
+best possible <span class="arithmatex">\(w\)</span>,</p>
+<div class="arithmatex">\[ \underset{w}{\max} \sum_{i=1}^{n} [(1 - y_i)(- w^T x_i) - \log(1 + e^{- w^T x_i})] \]</div>
+<p>However , the above equation doesnt have a closed-form solution when a derivative is taken
+to solve further. Therefore, we will use gradient descent to identify the best <span class="arithmatex">\(w\)</span>.</p>
+<p>The gradient descent of the above log-likelihood function will be,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\nabla \log (\mathcal{L}(w;D)) &amp;= \sum_{i=1}^{n} \left[(1 - y_i)(-x_i) - \frac{e^{-w^T x_i}}{1 + e^{-w^Tx)i}} (-x_i)  \right] \\
+&amp;= \sum_{i=1}^{n} \left[ -x_i + x_i y_i + x_i \left( \frac{e^{-w^T x_i}}{1 + e^{-w^Tx_i}} \right)  \right] \\
+&amp;= \sum_{i=1}^{n} \left[ x_iy_i - x_i \left( \frac{1}{1 + e^{-w^T x_i}} \right) \right] \\
+\nabla \log(\mathcal{L}(w;D)) &amp;= \sum_{i=1}^{n} \left[ x_i \left(y_i - \frac{1}{1 + e^{-w^T x_i}}  \right)  \right]
+\end{split}
+\end{equation*}\]</div>
+<p>Using the Gradient Descent formula we get,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+w_{t+1} &amp;= w_t + \mathcal{n}_t \nabla \log ( \mathcal{L}(w;D))\\
+&amp;= w_t + \mathcal{n}_t \left( \sum_{i=1}^n x_i \left(\overbrace{y_i - \underbrace{\frac{1}{1 + e^{-w^Tx_i}}}_{g(w^T x_i)}}^{\theta_i}  \right)  \right)
+\end{split}
+\end{equation*}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li>The term after <span class="arithmatex">\(y_i\)</span> is the Sigmoid Function which outputs a probability for a certain 
+score of a datapoint.</li>
+<li>Lets say for a point the actual label is +1 and it is predicted correctly as +1 (<span class="arithmatex">\(y_i = 1\)</span>) , this 
+means that the point has a higher probability (lets say <span class="arithmatex">\(g(w^Tx_i) = 0.9\)</span>) when compared to the other 
+binary label, which was derived from the sigmoid function.
+This also means that <span class="arithmatex">\(\theta_i\)</span> will be a small value as <span class="arithmatex">\(1 - 0.9 = 0.1\)</span>. This also means that 
+this particular datapoint will not have much effect on the direction of the gradient descent algorithm.</li>
+<li><strong>Prediction of a datapoint <span class="arithmatex">\(x_\text{test}\)</span> is given by</strong> ,</li>
+</ul>
+<div class="arithmatex">\[ y_\text{test} = \text{sign}( \hat{w}^T x_\text{test} ) \]</div>
+</div>
+<h3 id="advantages-of-logistic-regression">Advantages of Logistic Regression</h3>
+<ul>
+<li>
+<p>There is a kernel version for the above equation as it can be argued that 
+<span class="arithmatex">\(w = \sum_{i=1}^n \alpha_i x_i\)</span></p>
+</li>
+<li>
+<p>Regularized Version for the above equation is ,</p>
+</li>
+</ul>
+<div class="arithmatex">\[\underset{w}{\min} \sum_{i=1}^n \left[ \log(1 + e^{-w^T x_i}) + w^T x_i (1-y_i) \right] + \underbrace{\frac{\lambda}{2} ||w||^2}_{\text{Regularizer}} \]</div>
+<p>Here <span class="arithmatex">\(\lambda\)</span> is Cross Validated Hyperparameter.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Principal Component Analysis (PCA) - Machine Learning Theory</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <link href="../stylesheets/extra.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Machine Learning Theory</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Machine Learning Theory</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM/" class="nav-link">Support Vector Machine</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM2/" class="nav-link">SVM2</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Types%20of%20Models/" class="nav-link">Types of Models</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../classification/" class="nav-link">Classification</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../clustering/" class="nav-link">Clustering</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../estimation/" class="nav-link">Estimation</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../kernel_pca/" class="nav-link">Kernel PCA</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">Principal Component Analysis (PCA)</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../perceptron_learning/" class="nav-link">Logistic Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../regression/" class="nav-link">Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../supervised_learning/" class="nav-link">Supervised Learning</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Img <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../img/Representation%20Learning/" class="dropdown-item">Principal Component Analysis (PCA)</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../kernel_pca/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../perceptron_learning/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#principal-component-analysis-pca" class="nav-link">Principal Component Analysis (PCA)</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#introduction" class="nav-link">Introduction</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#representation-learning-1" class="nav-link">Representation Learning (1)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#representation-learning-2" class="nav-link">Representation Learning (2)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#principal-component-analysis-1" class="nav-link">Principal Component Analysis (1)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#principal-component-analysis-2" class="nav-link">Principal Component Analysis (2)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="principal-component-analysis-pca">Principal Component Analysis (PCA)</h1>
+<h2 id="introduction">Introduction</h2>
+<p>Unsupervised learning, specifically "representation learning," is a subset of 
+machine learning where the goal is to automatically discover meaningful representations
+or features from raw data without explicit supervision or labeled examples. 
+In representation learning, the algorithms aim to capture the underlying structure, 
+patterns, or features within the data itself. 
+This can be highly valuable for various tasks like data compression, feature extraction, 
+data visualization, and even for improving the performance of other machine learning models.</p>
+<h2 id="representation-learning-1">Representation Learning (1)</h2>
+<p>The main objective of representation learning is to transform 
+the input data into a more meaningful and <strong>compact</strong> representation.
+This representation should capture the essential characteristics 
+of the data, making it easier to analyze or use in downstream tasks.</p>
+<div class="admonition question">
+<p class="admonition-title">What is the need for compression of data points?</p>
+<p>Compressing a dataset, especially in the context of unsupervised learning 
+or data preprocessing, can serve several important purposes and 
+provide various benefits , mainly:</p>
+<ul>
+<li>
+<p><strong>Reduced Storage Space</strong>: Large datasets can require significant storage space. 
+Compressing the dataset reduces storage requirements,
+which can be cost-effective, especially when dealing 
+with massive datasets in cloud storage or on limited storage devices.</p>
+</li>
+<li>
+<p><strong>Faster Data Transfer</strong>: Smaller datasets transfer more quickly over networks, 
+which is crucial when moving data between systems or 
+uploading/downloading data from the internet.</p>
+</li>
+<li>
+<p><strong>Faster Training</strong>: When working with machine learning models, 
+smaller datasets can lead to faster training times. 
+This is particularly important when experimenting 
+with different models, hyperparameters, or architectures.</p>
+</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">How to Compress Data Points?</p>
+<p>Lets say there are 4 data points <span class="arithmatex">\(\left\{
+\stackrel{x_1}{\begin{bmatrix} -7 \\ -14 \end{bmatrix}} , 
+\stackrel{x_2}{\begin{bmatrix} 2.5 \\ 5 \end{bmatrix}} ,
+\stackrel{x_3}{\begin{bmatrix} 0.5 \\ 1 \end{bmatrix}} ,
+\stackrel{x_4}{\begin{bmatrix} 0 \\ 0 \end{bmatrix}}
+\right\}\)</span></p>
+<blockquote>
+<p>Now one might ask , "how many data points are needed to store this
+dataset?"</p>
+<p>The naive answer would be to say , "as there are 8 data points , hence 8
+real numbers are required to store this dataset."</p>
+</blockquote>
+<p>A better way to represent this dataset would be to find a "function" which takes 
+1 real number and outputs a matrix of 2 real numbers.
+If we look at the dataset we can see that the first coordinate is half of the second coordinate.
+We can exploit this feature of the dataset to reduce the number of data points to be 
+stored.</p>
+<p>One way to form this "function" would be to get a "representative" <span class="arithmatex">\(\begin{bmatrix} 1 \\ 2 \end{bmatrix}\)</span>
+and "coefficients" <span class="arithmatex">\(\{ -7 , 2.5 , 0.5 ,1 \}\)</span>. Now we can get the back our dataset by multiplying them with 
+the coefficients.</p>
+<p>Using this way we only need to store 6 real numbers (4 for coefficients + 2 for representative).
+Similarly, on a dataset of <span class="arithmatex">\(2n\)</span> points , we can store them as <span class="arithmatex">\(n +2\)</span> real numbers (<span class="arithmatex">\(n\)</span> coefficients +
+2 for representative).</p>
+</div>
+</div>
+<h3 id="working-with-a-realistic-dataset">Working with a Realistic Dataset</h3>
+<p>In the above example we were able construct a function which reduced the number of real
+numbers required to represent the dataset , but in a realistic dataset all the points do not lie
+on the same line , they are scattered and its very hard to derive meaningful conclusions from them.</p>
+<blockquote>
+<p>"What to do if all the points dont lie in the dataset?"</p>
+<p>A simple answer would be, "We can get more <strong>representatives</strong> to accommodate the points which do not lie on the same line."
+This approach does accommodate the outliers but it also increases the number of real numbers required to represent the dataset.</p>
+<p>"Whats the solution then?"</p>
+<p>There has to be a tradeoff between the "accuracy" or the "size" of the dataset. If we want to reduce the size 
+of the "size" then approximating the outlier to the "line" with least lost would be the best bet.</p>
+</blockquote>
+<p>To represent outliers and reduce the size of the dataset at the same time , we must project the 
+outlier onto the line.</p>
+<p><img alt="Projection of Outlier " src="/img/Projection.svg" /></p>
+<p>Let there be a vector <span class="arithmatex">\(\begin{bmatrix} w_1 \\ w_2 \end{bmatrix}\)</span> which represents the "line".
+The projection of the vector <span class="arithmatex">\(\begin{bmatrix} x_1 \\ x_2 \end{bmatrix}\)</span> onto the line would be </p>
+<div class="arithmatex">\[ \left[ \frac{x_1w_1 + x_2w_2}{w_1^2 + w_2^2} \right] \begin{bmatrix} w_1 \\ w_2 \end{bmatrix} \]</div>
+<p>This will give us a point on the "line" with the least loss/distance.</p>
+<p>Now if we pick vector <span class="arithmatex">\((w_1 , w_2)\)</span> which lies on the "line" such that <span class="arithmatex">\(w_1^2 + w_2^2 = 1\)</span>,
+the above equation becomes</p>
+<div class="arithmatex">\[ \left[ {x_1w_1 + x_2w_2} \right] \begin{bmatrix} w_1 \\ w_2 \end{bmatrix} \]</div>
+<h2 id="representation-learning-2">Representation Learning (2)</h2>
+<p>Our original objective was to find a "compressed" representation of the data 
+when all the data-points not necessarily fall on the same line.</p>
+<blockquote>
+<p>"How do we know that the line we picked is the best line?"</p>
+<p>One could argue that the same line doesnt fit all the data-points with the "<em>least loss</em>" ,
+where "<em>loss</em>" is the average of all the "<em>errors</em>" when projecting outliers onto the given "<em>line</em>".</p>
+</blockquote>
+<div class="admonition question">
+<p class="admonition-title">How to find the Best Line?</p>
+<p>To find the <strong>Best Line</strong> we should first have a certain way to compare 
+2 different lines. In our case it would be the line with the least "<em>reconstruction error</em>".</p>
+<p>Lets say for a dataset <span class="arithmatex">\(\{ x_1 , x_2 , .... x_n \}\)</span> , where <span class="arithmatex">\(x_i \in \mathbb{R}^d\)</span></p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\text{Error}(\text{line} , \text{dataset}) &amp; = \sum_{i=1}^n \text{error}(\text{line} , x_i) \\ 
+&amp; = \sum_{i=1}^n \text{length}^2(x - (x^Tw)w) \\
+&amp; = \sum_{i=1}^n || x - (x^Tw).w||^2 \\
+\end{split}
+\end{equation*}\]</div>
+<p>To minimize the above equation we can think of it as a function <span class="arithmatex">\(f(W)\)</span></p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+f(W) &amp;= \frac{1}{n}\sum_{i=1}^{n} || x - (x^Tw).w ||^2 \\
+&amp;= \frac{1}{n}\sum_{i=1}^{n} (x - (x^Tw).w)^T(x - (x^Tw).w)  \\
+&amp;= \frac{1}{n}\sum_{i=1}^{n} \left[ x_i^Tx_i - (x_i^Tw)^2 - (x_i^Tw)^2 + (x_i^Tw)^2(1) \right] \\
+&amp;= \frac{1}{n}\sum_{i=1}^{n} \left( x_i^Tx_i - (x_i^Tw)^2 \right)
+\end{split}
+\end{equation*}\]</div>
+<p>Here we are minimzing <span class="arithmatex">\(f(W)\)</span> with respect to <span class="arithmatex">\(w\)</span> , the first term of the above 
+equation <span class="arithmatex">\(x_i^Tx_i\)</span> can be ignored as its a constant.</p>
+<p>So we can write the new function as <span class="arithmatex">\(g(W)\)</span></p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\min_{W_{||w||^2 = 1}} g(W) &amp;= \frac{1}{n}\sum_{i=1}^n - (x_i^Tw)^2
+\end{split}
+\end{equation*}\]</div>
+<p>Alternatively this same function can be written as </p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\max_{W_{||w||^2 = 1}} g(W) =  \frac{1}{n}\sum_{i=1}^n (x_i^Tw)^2 &amp;= \frac{1}{n} \sum_{i=1}^{n} (w^Tx_i)(x_i^Tw) \\ 
+&amp;= \frac{1}{n} \sum_{i=1}^{n} w^T(x_ix_i^T)w \\
+&amp;= \frac{1}{n} w^T(\sum_{i=1}^{n} x_ix_i^T)w \\
+\end{split}
+\end{equation*}\]</div>
+<p>The above equation can also be written as </p>
+<div class="arithmatex">\[ \max_{w_{||w||^2 = 1}} w^TCw \]</div>
+<p>where <span class="arithmatex">\(C = \frac{1}{n}\sum_{i=1}^{n}x_ix_i^T\)</span></p>
+<p><strong>Note that <span class="arithmatex">\(C\)</span> is also the covariance matrix and the solution for the above maximization equation 
+would be the eigenvector corresponding to the largest eignevalue of <span class="arithmatex">\(C\)</span>.</strong></p>
+</div>
+<h3 id="error-vector-has-information">Error Vector has Information</h3>
+<p><img alt="" src="../img/ErrorVector.svg" /></p>
+<p>Our hypothesis was that there is a line which best represents the data but , if all the 
+data points lied along a plane then this part (dotted orange lines) which we are imagining to be error may not be 
+the error but rather useful information because the necessary information , the structure
+is in a plane but not on a line , so the bits we lose while selecting the best line will
+also contain some information.</p>
+<div class="admonition question">
+<p class="admonition-title">How do we extract this information?</p>
+<p>One possible algorithm could be ,</p>
+<ul>
+<li>Input : <span class="arithmatex">\(\{ x_1 , x_2 , x_3 ...... x_n \}  x_i \in \mathbb{R}^d\)</span></li>
+<li>Find the "<em>best</em>" line <span class="arithmatex">\(w_1 \in \mathbb{R}^d\)</span></li>
+<li>Replace <span class="arithmatex">\(x_i\)</span> with <span class="arithmatex">\(x_i - (x_i^Tw)w\)</span></li>
+<li>Repeat to obtain <span class="arithmatex">\(w_2\)</span></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Sometimes the data might not be centered around the origin.
+To counter that we can subtract the average of the dataset 
+from the points.</p>
+</div>
+</div>
+<h2 id="principal-component-analysis-1">Principal Component Analysis (1)</h2>
+<p><img alt="" src="../img/ErrorVector2.svg" /></p>
+<p>From the algorithm above we can find a <span class="arithmatex">\(w_2\)</span> vector which represents the line
+which passes through the "error/residues" generated while finding out <span class="arithmatex">\(w_1\)</span>.</p>
+<details class="info">
+<summary>Observations made while finding out <span class="arithmatex">\(\mathbf{w_2}\)</span></summary>
+<ul>
+<li>All "residues/errors" are orthogonal to <span class="arithmatex">\(w_1\)</span>.</li>
+<li>Any line which minimizes sum of errors w.r.t. residues 
+must also be orthogonal to <span class="arithmatex">\(w_1\)</span></li>
+</ul>
+</details>
+<blockquote>
+<p>A question which comes to mind is , "is there a relationship between <span class="arithmatex">\(w_1\)</span> and <span class="arithmatex">\(w_2\)</span>?"</p>
+<p>The answer is "Yes , there is a relationship."</p>
+</blockquote>
+<p><span class="arithmatex">\(w_1\)</span> and <span class="arithmatex">\(w_2\)</span> are orthognal to each other.</p>
+<div class="arithmatex">\[\implies w_1^Tw_2 = 0\]</div>
+<p>By continuing this procedure for dataset of <span class="arithmatex">\(d\)</span> dimension,
+we get a set of vectors <span class="arithmatex">\(\{ w_1 , w_2 , w_3 .... w_d \}\)</span> with the 
+following properties.</p>
+<ul>
+<li><span class="arithmatex">\(||w_k||^2 = 1 \; \; \; \forall k\)</span></li>
+<li><span class="arithmatex">\(w_iw_j = 0  \;\;\;\;\; \forall i \neq j\)</span></li>
+</ul>
+<p>Hence , we get a set of Orthonormal Vectors.</p>
+<div class="admonition question">
+<p class="admonition-title">What is the use of Set <span class="arithmatex">\(D\)</span> of Orthonormal Vectors?</p>
+<p>Residue after round 1 is </p>
+<p><span class="arithmatex">\(\left\{ x_1 - (x_1^Tw_1)w_1 , ..... , x_n - (x_n^Tw_1)w_1   \right\} \;\;\;\; \forall \;\; \text{vectors} \in \mathbb{R}^d\)</span></p>
+<p>Residue after round 2 is </p>
+<p><span class="arithmatex">\(\{ x_1 - (x_1^Tw_1)w_1 - (x_1 - (x_1^Tw_1)w_1)^Tw_2 , ..... \}\)</span></p>
+<p><span class="arithmatex">\(\{ x_1 - (x_1^Tw_1)w_1 - (x_1^Tw_2 - (x_1^Tw_1).w_1^Tw_2)w_2 , ......   \}\)</span></p>
+<p><span class="arithmatex">\(\{ x_1 - (x_1^Tw_1)w_1 - (x_1^Tw_2)w_2 , ......  \}\)</span> as <span class="arithmatex">\([w_1^Tw_2 = 0]\)</span></p>
+<p>Residue after <span class="arithmatex">\(d\)</span> rounds is </p>
+<p><span class="arithmatex">\(\forall i \;\;\;\;\;\; x_i - ((x_i^Tw_1)w_1 + (x_i^Tw_2)w_2 + ...... (x_i^Tw_d)w_d) = 0\)</span></p>
+<p>After <span class="arithmatex">\(d\)</span> rounds all the error vectors become zero vectors. </p>
+<p><span class="arithmatex">\(\forall i \;\;\;\;\;\; x_i = ((x_i^Tw_1)w_1 + (x_i^Tw_2)w_2 + ...... (x_i^Tw_d)w_d)\)</span></p>
+<p><strong>This leads to the conclusion that if data lives in a "low" dimensional linear sub-space,
+then residue becomes 0 much earlier than <span class="arithmatex">\(d\)</span> rounds.</strong></p>
+<div class="admonition question">
+<p class="admonition-title">What does the above statement actually mean?</p>
+<p>Lets say for a dataset <span class="arithmatex">\(\{x_1 , x_2 \cdots , x_n \}\)</span> , where <span class="arithmatex">\(x_i \in \mathbb{R}^d\)</span> , 
+all the residues/error vectors become 0 after 3 rounds.</p>
+<p>This means that every datapoint can be expressed as the sum of projections itself onto
+the residues/error vectors.</p>
+<div class="arithmatex">\[ \forall i \;\; x_i = (x_i^Tw_1)w_1 + (x_i^Tw_2)w_2 + (x_i^Tw_3)w_3 \]</div>
+<p>where <span class="arithmatex">\(\{w_1 ,w_2 ,w_3 \} \in \mathbb{R}^d\)</span></p>
+<p><strong>Note</strong> that the <span class="arithmatex">\(\{w_1 ,w_2 ,w_3 \}\)</span> are the representatives and 
+<span class="arithmatex">\(\{x_i^T w_1 , x_i^T w_2 , x_i^T w_3 \}\)</span> are the coefficients for a datapoint <span class="arithmatex">\(x_i\)</span></p>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>Lets assume for a dataset of dimension <span class="arithmatex">\(d\)</span> and <span class="arithmatex">\(n\)</span> points , after <span class="arithmatex">\(k\)</span> rounds the 
+error vectors become zero vectors.</p>
+<p>This means that now the dataset can be represented with <span class="arithmatex">\(\mathbf{d \times k + k \times n}\)</span>
+points instead of <span class="arithmatex">\(d \times n\)</span> points.</p>
+<blockquote>
+<p>In the case shown above where the residues/error vectors become 0 after <span class="arithmatex">\(k = 3\)</span> rounds,
+we can represent the whole dataset as,
+<span class="arithmatex">\(d \times 3\)</span>  +  <span class="arithmatex">\(3 \times n\)</span></p>
+<p>Where , <span class="arithmatex">\(d \times 3\)</span> = Total numbers required to store the representatives</p>
+<p><span class="arithmatex">\(3 \times n\)</span> = Total numbers required to store datapoints</p>
+</blockquote>
+</div>
+</div>
+<h2 id="principal-component-analysis-2">Principal Component Analysis (2)</h2>
+<p>Our original problem was </p>
+<div class="arithmatex">\[ \max_{w_{||w||^2 = 1}} w^TCw \]</div>
+<p>where <span class="arithmatex">\(C = \frac{1}{n}\sum_{i=1}^{n}x_ix_i^T\)</span> , and the solution for this problem 
+was the <strong>eigenvector corresponding to the maximum eigenvalue</strong>.</p>
+<p>We also observed that the set of eigenvectors <span class="arithmatex">\((\{w_1 , w_2 , .... w_d\})\)</span> coresspnding to the eigenvalues of <span class="arithmatex">\(C\)</span>
+form an orthonormal basis. </p>
+<p>Now lets look at this problem in a more "linear algebraic" way,</p>
+<p>We know,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+Cw_1 &amp;= \lambda_1 w_1 \\ 
+w_1^TCw_1 &amp;= w_1^T(\lambda_1w_1) = \lambda_1 \\
+\lambda_1 &amp;= w_1^TCw_1 = w_1^T(\frac{1}{n}\sum_{i=1}^{n}x_ix_i^T)w_1 \\
+\lambda_1 &amp;= \frac{1}{n}\sum_{i=1}^{n}(x_i^Tw_1)^2
+\end{split}
+\end{equation*}\]</div>
+<p>Usually we take highest <span class="arithmatex">\(L\)</span> lambdas such that 95% of the variance in the dataset
+is captured,</p>
+<div class="arithmatex">\[\frac{\sum_{i=1}^L \lambda_i }{ \sum_{i=1}^d \lambda_i } \geq 0.95\]</div>
+<p>where , <span class="arithmatex">\(\lambda_i\)</span> are the eigenvalues of the covariance matrix .</p>
+<h3 id="relation-between-variance-and-mathbflambda">Relation between Variance and <span class="arithmatex">\(\mathbf{\lambda}\)</span></h3>
+<p>For an arbitrary set of points <span class="arithmatex">\((\{(x_1^Tw) , (x_2^Tw) ...... (x_n^T)w   \})\)</span>
+projected onto line represented by vector <span class="arithmatex">\(w\)</span>.</p>
+<p><img alt="" src="../img/VarianceIsLambda.svg" /></p>
+<p>The average <span class="arithmatex">\(\mu\)</span> of the projected points will be <span class="arithmatex">\(\frac{1}{n}\sum_{i=1}^{n}(x_i^Tw)\)</span>.
+If the data is centered then,</p>
+<div class="arithmatex">\[\frac{1}{n}\sum_{i=1}^{n}(x_i^Tw) = (\frac{1}{n}\sum_{i=1}^{n}x_i)w = 0w = 0\]</div>
+<p>This implies that average for a centered dataset is <span class="arithmatex">\(\mu = 0\)</span>.</p>
+<p>The variance of this same dataset will be ,</p>
+<div class="arithmatex">\[\frac{1}{n}\sum_{i=1}^{n}(x_i^Tw - \mu)^2 = \frac{1}{n}\sum_{i=1}^{n}(x_i^Tw)^2\]</div>
+<p>We can see that the variance is same as <span class="arithmatex">\(\lambda\)</span> required to solve the maximization problem.</p>
+<p><strong>Hence we can say that , variance maximization is the same as error minimization on 
+centered dataset</strong></p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

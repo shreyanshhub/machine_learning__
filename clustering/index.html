@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Clustering - Machine Learning Theory</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <link href="../stylesheets/extra.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Machine Learning Theory</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Machine Learning Theory</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM/" class="nav-link">Support Vector Machine</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM2/" class="nav-link">SVM2</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Types%20of%20Models/" class="nav-link">Types of Models</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../classification/" class="nav-link">Classification</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">Clustering</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../estimation/" class="nav-link">Estimation</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../kernel_pca/" class="nav-link">Kernel PCA</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../pca/" class="nav-link">Principal Component Analysis (PCA)</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../perceptron_learning/" class="nav-link">Logistic Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../regression/" class="nav-link">Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../supervised_learning/" class="nav-link">Supervised Learning</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Img <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../img/Representation%20Learning/" class="dropdown-item">Principal Component Analysis (PCA)</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../classification/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../estimation/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#clustering" class="nav-link">Clustering</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#problems-with-clustering" class="nav-link">Problems with Clustering</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#k-means-algorithm" class="nav-link">K-Means Algorithm</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#convergence-of-k-means-algorithm" class="nav-link">Convergence of K-Means Algorithm</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#nature-of-clusters" class="nav-link">Nature of Clusters</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#initialization-of-centroids-k-means" class="nav-link">Initialization of Centroids, K-Means++</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="clustering">Clustering</h1>
+<p>Clustering is a technique in unsupervised machine learning that involves 
+grouping similar data points together into clusters or groups based 
+on some similarity or distance measure. The goal of clustering is 
+to discover hidden patterns, structures, 
+or natural groupings within a dataset without 
+any prior knowledge of the groups or categories.</p>
+<h2 id="problems-with-clustering">Problems with Clustering</h2>
+<blockquote>
+<p>The goal of this weak is to understand the information about
+datapoints which are clustered together.</p>
+</blockquote>
+<p>If we were to cluster datapoints into <span class="arithmatex">\(k\)</span> different clusters 
+the total number of ways <span class="arithmatex">\(n\)</span> datapoints can be clustered is 
+<span class="arithmatex">\(k^n\)</span> (this includes empty clusters).</p>
+<p>For a set of datapoints from <span class="arithmatex">\(\{x_1 , x_2  , x_3 .... x_n \}\)</span> 
+and the cluster indicators from <span class="arithmatex">\(\{z_1 , z_2 , z_3 , .... z_n \}\)</span> ,
+we need to develop a metric to get an idea of how good the 
+clusters are.</p>
+<p>A common algorithm which can be used for this purpose is to 
+measure the distance of the datapoints from the mean of their 
+respective clusters and summing those values for each cluster 
+individually , a lower value indicates that the points are closely
+packed within a cluster , while a higher value indicates that the 
+points are spread apart.</p>
+<p>This algorithm can formalized into a function as follows </p>
+<div class="arithmatex">\[ F(z_1 , z_2 , z_3 , .... z_n ) = \sum_{i=1}^{n} ||x_i - u_{z_i}||_2^2 \]</div>
+<p>where <span class="arithmatex">\(\mu_{z_i}\)</span> is mean of each <span class="arithmatex">\(z_i^{th}\)</span> cluster.</p>
+<p>This way of clustering is considered an NP-Hard problem and 
+its computationally intensive as there are total of <span class="arithmatex">\(k^n\)</span> possible
+combinations of datapoints.</p>
+<h2 id="k-means-algorithm">K-Means Algorithm</h2>
+<p>To solve the above problem of clustering we will take a look 
+at K-Means Algorithm.</p>
+<p>The first step is <strong>Initialization</strong> , where each cluster 
+indicator is assigned a cluster between <span class="arithmatex">\(1\)</span> to <span class="arithmatex">\(k\)</span> for the 
+<span class="arithmatex">\(0^{th}\)</span> iteration.</p>
+<div class="arithmatex">\[ z_1^0 , z_2^0 , z_3^0 , .... z_n^0  \;\;\;\; \in \{1,2,3, .... k \}\]</div>
+<p>Then until Convergence ,</p>
+<p>We first compute the mean of each cluster for the <span class="arithmatex">\(t^{th}\)</span> iteration.</p>
+<div class="arithmatex">\[ \mu_k^t = \frac{\sum_{i=1}^{n}x_i \mathbb{1}(z_i^t = k)}{\sum_{i=1}^{n}\mathbb{1}(z_i^t = k)} \;\;\;\;\;\; \forall k \]</div>
+<p>The next step is reassignment of the datapoints,</p>
+<div class="arithmatex">\[ Z_i^{t+1} = \underset{k}{\text{arg } \min} ||x_i  - \mu_t^k ||_2^2 \]</div>
+<p>This step compares every point's distance to the mean of every other cluster ,
+if the distane to the mean is strictly less than the distance to mean 
+of the current cluster then the datapoint is assigned to the next cluster.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>K-Means Algorithm does not always produce the optimal solution but 
+usally produces reasonable clusters.</p>
+</div>
+<blockquote>
+<p>But what if the algorithm never actually converges?</p>
+<p>The short answer is Yes , the algorithm does converge.
+But how?</p>
+</blockquote>
+<h2 id="convergence-of-k-means-algorithm">Convergence of K-Means Algorithm</h2>
+<p><strong>FACT 1</strong></p>
+<p>Let <span class="arithmatex">\(X_1 , X_2 , X_3 ..... X_l \in \mathbb{R}^d\)</span></p>
+<div class="arithmatex">\[ v^* = \underset{v \in \mathbb{R}^d}{\text{arg min }} \sum_{i=1}^{l} {|| x_i - v ||}^2\]</div>
+<p>Using differentitation to solve this problem </p>
+<div class="arithmatex">\[ v^* = \frac{1}{l}\sum_{i=1}^{n}X_i \]</div>
+<blockquote>
+<p>The actual proof of convergence of K-Means Algorithm starts here.</p>
+</blockquote>
+<p>Lets assume that we are at iteration <span class="arithmatex">\(t\)</span> of Lloyd's/K-Means Algorithm.</p>
+<p>Then our current assignment of cluster indicators would look like </p>
+<div class="arithmatex">\[ Z_1^t , Z_2^t , Z_3^t .... Z_n^t \;\;\;\;\; \in \{ 1, 2, 3 .... k\}\]</div>
+<p>Here <span class="arithmatex">\(t\)</span> corresponds to the iteration number and <span class="arithmatex">\(n\)</span>/subscript corresponds to 
+the data point.</p>
+<p>Also , <span class="arithmatex">\(\mu_k^t\)</span> is the mean for cluster <span class="arithmatex">\(k\)</span> in the <span class="arithmatex">\(t^{\text{th}}\)</span> (current) iteration.</p>
+<p>Now lets assume the algorithm does not converge and see what happens.
+If it doesnt converge , then the cluster indicators would be reassigned.</p>
+<div class="arithmatex">\[ Z_1^{t+1} , Z_2^{t+1} , Z_3^{t+1} , ...... Z_n^{t+1} \;\;\;\;\;\;\; \in \{1,2,3....k\} \]</div>
+<blockquote>
+<p>After this reassignment we dont know for sure that this assignment of 
+cluster indicators is better than the previous one , to solve this problem 
+we will take a look at the "objective function".</p>
+</blockquote>
+<div class="arithmatex">\[ \begin{equation}
+\sum_{i=1}^n {|| x_i - \mu_{Z_i^t}^t ||}^2 \tag{1} \label{1}
+\end{equation} \]</div>
+<p>Here we can see that we are in the <span class="arithmatex">\(t^{th}\)</span> iteration in which every point is being
+measured in this experession to the mean of the box it is assigned to.</p>
+<p>Basically , this experession captures the distances of each point to its own mean 
+in the <span class="arithmatex">\(t^{\text{th}}\)</span> iteration.</p>
+<div class="arithmatex">\[ \begin{equation}
+\sum_{i=1}^{n} {||x_i - \mu_{Z_i^{t+1}}^t ||}^2 \tag{2} \label{2}
+\end{equation} \]</div>
+<p>Here every point is measured to the mean of the cluster <em>it wants to switch to</em>.</p>
+<blockquote>
+<p>Some points might have lesser distance to their current cluster than the <em>new cluster mean,
+they want to switch to</em> , in that case <span class="arithmatex">\(Z_i^{t+1}\)</span> is the same as <span class="arithmatex">\(Z_i^t\)</span>.</p>
+<p>While the other points might have distance closer to the <em>new cluster mean</em> 
+than their current mean , in that case they jump to the new cluster and thats when 
+the actual reassignment happens.</p>
+</blockquote>
+<p>As our assumption above , if the algorithm does not converge then there must be some points 
+who <em>want to jump/switch to a new cluster mean</em> which is closer to them.</p>
+<p>This means that the sum of <span class="arithmatex">\((\ref{2})\)</span> will be less than the sum of <span class="arithmatex">\((\ref{1})\)</span>.</p>
+<h2 id="nature-of-clusters">Nature of Clusters</h2>
+<blockquote>
+<p>Now that we know that the algorithm converges , 
+what can we say about the clusters formed using this algorithm </p>
+</blockquote>
+<p>Lets understand this with an example where there are only 2 clusters.
+The means of the 2 clusters are <span class="arithmatex">\(\mu_1\)</span> and <span class="arithmatex">\(\mu_2\)</span>.</p>
+<p>By the algorithm's construction we know that every point is happy with their own
+mean , this also can be thought of as that every point that is assigned to cluster 
+1 is closer to <span class="arithmatex">\(\mu_1\)</span> than it is to <span class="arithmatex">\(\mu_2\)</span>.</p>
+<p>This can be expressed as,</p>
+<div class="arithmatex">\[ {||x - \mu_1||}^2 \leq {||x - \mu_2||}^2 \]</div>
+<p>This equation can further be changed into </p>
+<div class="arithmatex">\[ \begin{equation*}
+\begin{split}
+{||x||}^2  + {||\mu_1||}^2 - 2x^T\mu_1 \leq {||x||}^2 + {||\mu_2||}^2 - 2x^T\mu_2 \\
+x^T(\mu_2 - \mu_1) \leq \frac{{||\mu_2||}^2 - {||\mu_1||}^2}{2}
+\end{split}
+\end{equation*}\]</div>
+<blockquote>
+<p>Now how do we visualize this ? , what does this 
+actually represent?</p>
+</blockquote>
+<p><img alt="" src="../img/repr1.png" /></p>
+<p>Here the black line is the difference between <span class="arithmatex">\(\mu_1\)</span> and <span class="arithmatex">\(\mu_2\)</span> and the green 
+line perpendicular to the black one.</p>
+<p><img alt="" src="../img/repr2.png" /></p>
+<p>The yellow line is drawn from the middle point of <span class="arithmatex">\(\mu_2 - \mu_1\)</span> parallel to 
+the green line , this is the line that divides the plane into 2 regions for cluster 1 
+and cluster 2.</p>
+<p><img alt="" src="../img/repr3.png" /></p>
+<h2 id="initialization-of-centroids-k-means">Initialization of Centroids, K-Means++</h2>
+<blockquote>
+<p>Initially we assigned the points to random boxes , but this is not
+the best way to assign the points.</p>
+</blockquote>
+<p>In K-Means++ Algorithm we pick means of points which are as far apart
+as they can be.</p>
+<ul>
+<li>
+<p>It chooses first mean <span class="arithmatex">\(\mu_1^0\)</span> uniformly at random from 
+<span class="arithmatex">\(\{x_1 , x_2 , x_3 , .... , x_n \}\)</span></p>
+</li>
+<li>
+<p>For <span class="arithmatex">\(l = 2 , 3 , .... k\)</span> , (where <span class="arithmatex">\(l\)</span> represents the <span class="arithmatex">\(l^{\text{th}}\)</span> mean
+that we are going to pick) choose <span class="arithmatex">\(\mu_l^0\)</span> probabilistically proportional 
+to score. Here <em>score</em> is a positive number.</p>
+</li>
+</ul>
+<div class="arithmatex">\[ S(x) = \underset{j=1,2,.... l-1}{\min} {||x - \mu_j^0||}^2 \]</div></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
