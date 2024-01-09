@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Support Vector Machine - Machine Learning Theory</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <link href="../stylesheets/extra.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Machine Learning Theory</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Machine Learning Theory</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">Support Vector Machine</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM2/" class="nav-link">SVM2</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Types%20of%20Models/" class="nav-link">Types of Models</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../classification/" class="nav-link">Classification</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../clustering/" class="nav-link">Clustering</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../estimation/" class="nav-link">Estimation</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../kernel_pca/" class="nav-link">Kernel PCA</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../pca/" class="nav-link">Principal Component Analysis (PCA)</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../perceptron_learning/" class="nav-link">Logistic Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../regression/" class="nav-link">Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../supervised_learning/" class="nav-link">Supervised Learning</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Img <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../img/Representation%20Learning/" class="dropdown-item">Principal Component Analysis (PCA)</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href=".." class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../SVM2/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#support-vector-machine" class="nav-link">Support Vector Machine</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#perceptrons-and-margin" class="nav-link">Perceptrons and Margin</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#maximum-margin-formulation" class="nav-link">Maximum Margin: Formulation</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#constrained-optimization" class="nav-link">Constrained Optimization</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#formulating-the-dual-problem" class="nav-link">Formulating the Dual Problem</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#recap-flowchart" class="nav-link">Recap Flowchart</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#support-vector-machine_1" class="nav-link">Support Vector Machine</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="support-vector-machine">Support Vector Machine</h1>
+<h2 id="perceptrons-and-margin">Perceptrons and Margin</h2>
+<p>We know that in the Perceptron Algorithm the number of mistakes is given by,
+<span class="arithmatex">\(\text{#mistakes} \leq \frac{R^2}{\gamma^2}\)</span> , we also said that data is linearly 
+separable with margin <span class="arithmatex">\(\gamma\)</span> , which means that there exists some <span class="arithmatex">\(w^*\)</span> such that 
+<span class="arithmatex">\(w^{*^T} x_i \geq \gamma \quad \forall i , \gamma&gt;0\)</span> </p>
+<p><img alt="" src="../img/QualityFinalSolution.svg" /></p>
+<details class="question">
+<summary>Question</summary>
+<p>If we were given a dataset like in the above image , which of the 2 <span class="arithmatex">\(w^*\)</span> would be 
+a better choice?</p>
+</details>
+<ul>
+<li>
+<p>We can see that <span class="arithmatex">\(w_1^*\)</span> has a greater margin <span class="arithmatex">\(\gamma_1\)</span> when compared to <span class="arithmatex">\(w_2^*\)</span> which 
+has a smaller margin <span class="arithmatex">\(\gamma_2\)</span>.</p>
+</li>
+<li>
+<p>If we want to decrease the number if mistakes our algorithm makes, we can increase 
+the value of <span class="arithmatex">\(\gamma\)</span> because <span class="arithmatex">\(\text{#mistakes} \leq \frac{R^2}{\gamma^2}\)</span> , in other
+words number of mistakes is inversely proportional to <span class="arithmatex">\(\gamma^2\)</span>.<strong>The greater the <span class="arithmatex">\(\gamma\)</span>
+the lower will be the number of mistakes.</strong></p>
+</li>
+<li>
+<p>Therefore , the better of the 2 <span class="arithmatex">\(w^*\)</span> here is <span class="arithmatex">\(w_1^*\)</span>.</p>
+</li>
+</ul>
+<h2 id="maximum-margin-formulation">Maximum Margin: Formulation</h2>
+<p>Now that we know that <span class="arithmatex">\(w^*\)</span> which have larger <span class="arithmatex">\(\gamma\)</span> margin are better than other
+<span class="arithmatex">\(w^*\)</span> , our goal now is to come up with a formulation that maximizes <span class="arithmatex">\(\gamma\)</span> margin.</p>
+<div class="arithmatex">\[\label{max-margin-formulation} \tag{1}
+\underset{w,\gamma}{\max} \quad \gamma \quad
+\text{such that } (w^T x_i)y_i \geq \gamma \;\; \forall i\]</div>
+<blockquote>
+<p>We want to maximize <span class="arithmatex">\(\gamma\)</span> over <span class="arithmatex">\(w\)</span> , but we arent choosing any random <span class="arithmatex">\(w\)</span> ,
+the <span class="arithmatex">\(w\)</span> should satisfy the condition of <span class="arithmatex">\((w^T x_i)y_i \geq \gamma\)</span>.</p>
+</blockquote>
+<div class="admonition failure">
+<p class="admonition-title">Problem With Above Formulation</p>
+<p>Lets say for some <span class="arithmatex">\(w\)</span> the <span class="arithmatex">\(\gamma\)</span> margin is , <span class="arithmatex">\(\{ x:w^T x = 5 \}\)</span> , it can 
+be argued that there exists another <span class="arithmatex">\(w\)</span> such that <span class="arithmatex">\((2 w)^T x = 2 \times 5 = 10\)</span>.
+So for this <span class="arithmatex">\(w\)</span> , there exist infinitely many "scaled versions".</p>
+</div>
+<p>To solve the above stated problem , we will "ground" the value of <span class="arithmatex">\(w\)</span> such that 
+<span class="arithmatex">\(||w||^2 = 1\)</span>. Therefore our new formulation will be,</p>
+<div class="arithmatex">\[\begin{split}
+\underset{w , \gamma}{\max} \gamma \\ 
+\\
+\text{such that } \\
+(w^T x_i)y_i \geq \gamma \quad \forall i \\
+\text{and } ||w||^2 = 1
+\end{split}\]</div>
+<h3 id="simplified-formulation">Simplified Formulation</h3>
+<p>The above maximization can be reformulated into an expression with just 
+one variable (<span class="arithmatex">\(w\)</span>). </p>
+<div class="arithmatex">\[\label{abcd} \tag{1} \begin{split}
+\underset{w}{\max} \;\; \text{width}(w) \\ 
+\\
+\text{such that} \\
+(w^T x_i)y_i \geq 1 \quad \forall i \\
+\end{split}\]</div>
+<blockquote>
+<p>The equation here basically means that , we are allowing any <span class="arithmatex">\(w\)</span> which linearly 
+separates our dataset with <span class="arithmatex">\(\gamma\)</span> margin and the norm square 
+of that <span class="arithmatex">\(w\)</span> must be 1 and instead of 
+maximizing <span class="arithmatex">\(\gamma\)</span>, we are maximizing the width. The width here is 
+the distance between to parallel lines of <span class="arithmatex">\(\gamma\)</span> margins.</p>
+</blockquote>
+<div class="admonition question">
+<p class="admonition-title">What is width(w)?</p>
+<p>For some <span class="arithmatex">\(w\)</span> which classifies a dataset , <span class="arithmatex">\(x_1\)</span> and <span class="arithmatex">\(x_2\)</span> be the points lying on 
+the <span class="arithmatex">\(\gamma\)</span> margins. The distance between these points (width(w)) can be given by,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+x_1 ^T w - x_2 ^T w &amp;= 2 \\
+(x_1 - x_2)^T w &amp;= 2 \\ 
+||x_1 - x_2||_2 \; ||w||_2 \; \cos(\theta) &amp;= 2 \quad \quad (\theta =  0°) \\ 
+\therefore || x_1 - x_2 ||_2 &amp;= \frac{2}{||w||_2}
+\end{split}
+\end{equation*}\]</div>
+<p><img alt="" src="./img/WidthW.svg" /></p>
+</div>
+<h4 id="re-simplified-formulation">Re-Simplified Formulation</h4>
+<p>Now that we know what width(w) is , we can reformulate our maximization equation as ,</p>
+<div class="arithmatex">\[\begin{split}
+\underset{w}{\max} \;\; \frac{2}{||w||^2} \\
+\\
+\text{such that} \\
+(w^T x_i)y_i \geq 1 \quad \forall i \\
+\end{split}\]</div>
+<p>Equivalently , the above experession can be turned into a minimization equation,</p>
+<div class="arithmatex">\[\begin{split}
+\boxed{\underset{w}{\min} \;\; \frac{1}{2} ||w||^2} \\
+\\
+\text{such that} \\
+(w^T x_i)y_i \geq 1 \quad \forall i \\
+\end{split}\]</div>
+<h2 id="constrained-optimization">Constrained Optimization</h2>
+<p>Our goal now is to formulate a "dual problem" for the above minimization ("primal")
+problem.</p>
+<p>But for now we will look at,</p>
+<div class="arithmatex">\[\begin{split}
+\underset{w}{\min} f(w) \\ 
+\\
+\text{such that } \\
+g(w) \leq 0 \\
+\end{split}\]</div>
+<p>To solve for the above minimization problem we will form a lagrangian function,</p>
+<div class="arithmatex">\[ \mathcal{L}(w , \alpha) = f(w) + \alpha g(w) \]</div>
+<p>For a fixed value of <span class="arithmatex">\(w\)</span> , consider , </p>
+<div class="arithmatex">\[ \underset{\alpha \geq 0}{\max} \mathcal{L}(w , \alpha) = \underset{\alpha \geq 0}{\max} f(w) + \alpha g(w) \]</div>
+<h3 id="case-1">Case 1</h3>
+<ul>
+<li>Now that we have fixed a value of <span class="arithmatex">\(w\)</span> , lets assume that <span class="arithmatex">\(g(w) &gt; 0\)</span>.</li>
+<li>If <span class="arithmatex">\(g(w) &gt; 0\)</span> and <span class="arithmatex">\(f(w) \in \{-\infty , \infty \}\)</span> , to maximize the above function,
+we can keep increasing the value <span class="arithmatex">\(\alpha\)</span>. When the value of alpha is increased , the 
+value of <span class="arithmatex">\(g(w)\)</span> will also increase.</li>
+<li>Hence , when <span class="arithmatex">\(g(w) &gt; 0\)</span> the solution if <span class="arithmatex">\(\infty\)</span></li>
+</ul>
+<div class="admonition example">
+<p class="admonition-title">Example1 f(w) &gt; 0</p>
+<ul>
+<li>Lets say <span class="arithmatex">\(f(w) = 10\)</span> and <span class="arithmatex">\(g(w) = 20\)</span> , if the value of <span class="arithmatex">\(\alpha\)</span> is increased,
+the value of overall function will also increase. We can keep on increasing the 
+value of <span class="arithmatex">\(\alpha\)</span> and the value of overall function will keep on increasing.</li>
+<li>Hence , we say that the solution in this subcase is <span class="arithmatex">\(\infty\)</span></li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example2 f(w) &lt; 0</p>
+<ul>
+<li>Lets say <span class="arithmatex">\(f(w) = -100\)</span> and <span class="arithmatex">\(g(w) = 20\)</span> , if the value of <span class="arithmatex">\(\alpha\)</span> is increased,
+just like above , the value of overall function will also increase. <ul>
+<li>When <span class="arithmatex">\(\alpha = 5\)</span> ,the function will evalute to zero.</li>
+<li>When <span class="arithmatex">\(\alpha = 100\)</span> , the function will evalute to 1900.</li>
+</ul>
+</li>
+<li>Hence , we can say that the solution in this subcase also is <span class="arithmatex">\(\infty\)</span></li>
+</ul>
+</div>
+<h3 id="case-2">Case 2</h3>
+<ul>
+<li>In Case 2 we will assume that <span class="arithmatex">\(g(w) \leq 0\)</span>.</li>
+<li>If <span class="arithmatex">\(g(w) &lt; 0\)</span> and <span class="arithmatex">\(f(w) \in \{-\infty , \infty \}\)</span> , the only way to maximize the above 
+function is to put <span class="arithmatex">\(\alpha = 0\)</span>. When <span class="arithmatex">\(\alpha =0\)</span> , <span class="arithmatex">\(g(w)\)</span> will also become zero.</li>
+<li>Hence , when <span class="arithmatex">\(g(w) &lt; 0\)</span> the solution is always <span class="arithmatex">\(f(w)\)</span>.</li>
+</ul>
+<div class="admonition example">
+<p class="admonition-title">Example1 f(w)&gt;0</p>
+<ul>
+<li>Lets say <span class="arithmatex">\(f(w) = 10\)</span> and <span class="arithmatex">\(g(w) = -20\)</span> , no matter what value (except 0) of <span class="arithmatex">\(\alpha\)</span> we use here
+the overall function value will always decrease. The only way to maintain the value of the overall
+function is to put <span class="arithmatex">\(\alpha = 0\)</span>.</li>
+<li>Hence, we say that the solution in this subcase is always <span class="arithmatex">\(f(w)\)</span>.</li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example2 f(w)&lt;0</p>
+<ul>
+<li>Lets say <span class="arithmatex">\(f(w) = -10\)</span> and <span class="arithmatex">\(g(w) = -20\)</span> , no matter what value (except 0) of <span class="arithmatex">\(\alpha\)</span> we use here
+the overall value of the function (just like above) will decrease.<ul>
+<li>When <span class="arithmatex">\(\alpha = 5\)</span> the function will evaluate to -110.</li>
+<li>When <span class="arithmatex">\(\alpha = 100\)</span> the function will evaluate to -2010.</li>
+<li>It can be seen that if the value of <span class="arithmatex">\(\alpha\)</span> is increased , the overall value of the 
+function decreases.</li>
+</ul>
+</li>
+<li>Hence , we can say that the solution in this subcase is always <span class="arithmatex">\(f(w)\)</span>.</li>
+</ul>
+</div>
+<p><strong>Therefore the solutions for the above lagrangian maximization are,</strong></p>
+<div class="arithmatex">\[ \underset{\alpha \geq 0}{\max} \mathcal{L}(w , \alpha) = 
+\begin{cases} \infty &amp; g(w)&gt;0 \\ 
+f(w) &amp; g(w) \leq 0 \\
+\end{cases}\]</div>
+<h3 id="langrangian-function-maximization">Langrangian Function Maximization</h3>
+<p><img alt="" src="../img/LangrangianMax.svg" /></p>
+<p>Inside the shaded region , the function evaluates to <span class="arithmatex">\(f(w)\)</span> , while outside the 
+shaded region the function evaluates to <span class="arithmatex">\(\infty\)</span>.</p>
+<p>From the above diagram we can see that for multiple values of <span class="arithmatex">\(w\)</span> the function evalutes
+to <span class="arithmatex">\(f(w)\)</span>. We want to find the minimum <span class="arithmatex">\(w\)</span> at which the function evaluates to <span class="arithmatex">\(f(w)\)</span>,</p>
+<div class="arithmatex">\[\underset{w}{\min} \left[ \underset{\alpha \geq 0}{\max} f(w) + g(w)  \right] \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that this expression is same as the <a href="#constrained-optimization">original</a> 
+minimization problem we started with,</p>
+<div class="arithmatex">\[\begin{split}
+\underset{w}{\min} f(w) \\ 
+\\
+\text{such that } \\
+g(w) \leq 0 \\
+\end{split}\]</div>
+</div>
+<p>To gain more insight over our newly derived min-max problem we will try to turn it into
+a max-min problem.</p>
+<p>The max-min expression will be,</p>
+<div class="arithmatex">\[\underset{\alpha \geq 0}{\max} \left[ \underset{w}{\min} f(w) + g(w)  \right] \]</div>
+<p><strong>Note</strong> that we can turn it into a max-min problem because both <span class="arithmatex">\(f\)</span> and <span class="arithmatex">\(g\)</span> are 
+convex functions.</p>
+<h3 id="multiple-constraints">Multiple Constraints</h3>
+<p>If there are problems which require multiple constraints , they can be formulated 
+as,</p>
+<div class="arithmatex">\[\begin{split}
+\underset{w}{\min} f(w) \\ 
+\\
+\text{such that } \\
+g_i(w) \leq 0 \;\; \forall i \\
+\end{split}\]</div>
+<p>Equivalently this can also be written as,</p>
+<div class="arithmatex">\[\underset{w}{\min} \left[ \underset{\underset{\geq 0}{\alpha_1} , \underset{\geq 0}{\alpha_2} , ... \underset{\geq 0}{\alpha_k}}{\max} f(w) + \alpha_1 g_1(w) + \alpha_2 g_2(w) \cdots + \alpha_k g_k(w)  \right] \]</div>
+<p><strong>Note</strong> that <span class="arithmatex">\(i\)</span> here represents the number constraints and there are total <span class="arithmatex">\(k\)</span> constrains.</p>
+<h2 id="formulating-the-dual-problem">Formulating the Dual Problem</h2>
+<ul>
+<li>We started off with <a href="#mjx-eqn%3Amax-margin-formulation">maximizing </a> <span class="arithmatex">\(\gamma\)</span> so that the number of mistakes made by our algoritm
+are less/reduced. </li>
+<li>We then turned it into a <a href="#simplified-formulation">expression</a> with only one variable <span class="arithmatex">\(w\)</span></li>
+<li>After that , we <a href="#re-simplified-formulation">resimplified</a> the 
+maximization expression for <span class="arithmatex">\(||w||\)</span> instead of width(w).</li>
+<li>Then we took a detour and solved for a <a href="#constrained-optimization">constrained opitmization problem</a>.</li>
+<li>We then modified the constrained optimization problem and ended with
+ <a href="#langrangian-function-maximization">lagrangian maximization</a> expression.</li>
+</ul>
+<p><img alt="" src="../img/flowchart.svg" /></p>
+<blockquote>
+<p>But where does this all lead to?</p>
+</blockquote>
+<p>This leads us to getting back to the <a href="#re-simplified-formulation">re-simplified problem</a> and 
+change it in such a way that it matches with the <a href="#constrained-optimization">constrained optimization</a>
+problem.</p>
+<p>Our Re-Simplified Expression was,</p>
+<div class="arithmatex">\[\begin{split}
+\underset{w}{\min} \;\; \frac{1}{2} ||w||^2 \\
+\\
+\text{such that} \\
+(w^T x_i)y_i \geq 1 \quad \forall i \\
+\end{split}\]</div>
+<p>To treat this expression as a constrained optimization problem that we did above ,
+we have to convert this to standard form. Here the constraint is <span class="arithmatex">\((w^T x_i)y_i \geq 1\)</span> but in our
+constrained optimization problem the constraint was <span class="arithmatex">\(g(w) \leq 0\)</span>.</p>
+<h3 id="standardized-form">Standardized Form</h3>
+<p>The standard form will be,</p>
+<div class="arithmatex">\[\label{efgh} \tag{2} \begin{split}
+\underset{w}{\min} \;\; \frac{1}{2} ||w||^2 \\
+\\
+\text{such that} \\
+1 - (w^T x_i)y_i \leq 0 \quad \forall i \\
+\end{split}\]</div>
+<p>Now the langrangian function for this standardized form will be,</p>
+<div class="arithmatex">\[\mathcal{L}(w , \alpha) = \frac{1}{2} ||w||^2 + \sum_{i=1}^{n} \alpha_i (1 - (w^T x_i)y_i)\]</div>
+<p>We know that a langrangian function can be written as an 
+<a href="#langrangian-function-maximization">min-max</a> expression,</p>
+<div class="arithmatex">\[\underset{w}{\min} \underset{\alpha \geq 0}{\max} \left[
+\frac{1}{2} ||w||^2 + \sum_{i=1}^n \alpha_i \left( 1 - (w^T x_i)y_i  \right)
+\right]\]</div>
+<p>Similarly , this can also be written as max-min problem,</p>
+<div class="arithmatex">\[\underset{\alpha \geq 0}{\max} \underset{w}{\min} \left[
+\frac{1}{2} ||w||^2 + \sum_{i=1}^n \alpha_i \left( 1 - (w^T x_i)y_i  \right)
+\right]\]</div>
+<p><strong>Note</strong> that <span class="arithmatex">\(\alpha \geq 0\)</span> means that <span class="arithmatex">\(\alpha\)</span> is a column matrix with 
+all the <span class="arithmatex">\(\alpha_i\)</span> to be <span class="arithmatex">\(\geq 0\)</span>.</p>
+<p>We will now work with this max-min problem to further deepen our understanding 
+about our original <span class="arithmatex">\(||w||\)</span> maximization problem. </p>
+<h3 id="solution-for-langrangian-max-min-problem">Solution for Langrangian Max-Min Problem</h3>
+<p>For some <span class="arithmatex">\(\alpha \geq 0\)</span>,the inner minimization problem becomes an unconstrained
+optimization problem. We will try to find its solution using gradients,</p>
+<div class="arithmatex">\[\underset{w}{\min} \quad \frac{1}{2} ||w||^2 + \sum_{i=1}^{n} \alpha_i (1 - (w^T x_i)y_i )\]</div>
+<p>The gradient of above expression is ,</p>
+<div class="arithmatex">\[\begin{split}
+w^*_{\alpha} + \sum_{i=1}^n \alpha_i (-x_i y_i) = 0 \\
+w^*_{\alpha} = \sum_{i=1}^n \alpha_i ( x_i y_i) \\
+\end{split}\]</div>
+<p>From this we can conclude that for a fixed value of <span class="arithmatex">\(\alpha\)</span> our best <span class="arithmatex">\(w\)</span> would be 
+a linear combination of <span class="arithmatex">\(x_i,y_i,\alpha_i\)</span></p>
+<p>If we substitute this value of <span class="arithmatex">\(w^*_\alpha\)</span> we can find the minimizer of the min-max 
+expression above. On simplification after substitution,</p>
+<div class="arithmatex">\[ \alpha^T I - \frac{1}{2} (XY \alpha)^T (XY \alpha) \]</div>
+<p><strong>Note</strong> that here <span class="arithmatex">\(w^*_\alpha\)</span> here is in matrix notation form (<span class="arithmatex">\(w^*_\alpha = XY \alpha\)</span>).</p>
+<p>Therefore the "dual" problem to the "primal" problem will be,</p>
+<div class="arithmatex">\[\underset{w \geq 0}{\max} \alpha^T I - \frac{1}{2} \alpha^T Y^T X^TX Y \alpha \]</div>
+<blockquote>
+<p>So what have we gained after finally arriving at this dual problem?</p>
+</blockquote>
+<ul>
+<li>Dual Variable is in <span class="arithmatex">\(\mathbb{R}^n\)</span> dimension , while the primal problem is in 
+<span class="arithmatex">\(\mathbb{R}^d\)</span> space.<ul>
+<li>If <span class="arithmatex">\(d &gt;&gt; n\)</span> , its better to solve the dual problem.</li>
+</ul>
+</li>
+<li>The objective in dual problem depends on <span class="arithmatex">\(X^TX\)</span> , <strong>which can be kernalized.</strong></li>
+</ul>
+<h2 id="recap-flowchart">Recap Flowchart</h2>
+<p><img alt="" src="../img/Recap.svg" /></p>
+<h2 id="support-vector-machine_1">Support Vector Machine</h2>
+<p>Now that we know that <span class="arithmatex">\(w^*_\alpha\)</span> depends on <span class="arithmatex">\(\alpha_i\)</span> , where importance of a 
+datapoint is given by <span class="arithmatex">\(\alpha_i\)</span> , we want to find out the points where <span class="arithmatex">\(\alpha_i &gt; 0\)</span>.</p>
+<blockquote>
+<p>We will take a small detour and get back to this question.</p>
+</blockquote>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\underset{\mathbf{w^*} \text{ is the primal solution}}{\overset{\textbf{Primal}}
+{\underset{w}{\min} \left[ \underset{\alpha \geq 0}{\max} f(w) + \alpha g(w)  \right]}} &amp;=
+\
+\underset{\pmb{\alpha^*} \text{ is the dual solution}}{\overset{\textbf{Dual}}
+{ \underset{\alpha \geq 0}{\max} \left[ \underset{w}{\min}  f(w) + \alpha g(w)  \right]}} \\
+\end{split}
+\end{equation*}\]</div>
+<p>Now we will input the solutions of the dual and primal problems back into their 
+equations,</p>
+<div class="arithmatex">\[ \underset{\alpha \geq 0}{\max} f(w^*) + \alpha g(w^*) \quad \quad \quad \quad 
+\underset{w}{\min} f(w) + \alpha^* g(w) \]</div>
+<p>The function on the left (primal problem) will evaluate to <span class="arithmatex">\(f(w^*)\)</span></p>
+<p>$$$$</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+f(w^*) = \underset{w}{\min} f(w) + \alpha^* g(w) &amp;\leq f(w^*) + \alpha^* g(w^*) \\
+f(w^*) &amp;\leq f(w^*) + \alpha^* g(w^*) \\
+\alpha^* g(w^*) &amp;\geq 0 \\
+\end{split}
+\end{equation*}\]</div>
+<p>But we already know  <span class="arithmatex">\(\alpha^* \geq 0\)</span> and <span class="arithmatex">\(g(w^*) \leq 0\)</span>. 
+The only point where both our equations are true is,</p>
+<h3 id="complementary-slackness">Complementary Slackness</h3>
+<div class="arithmatex">\[\alpha^* g(w^*) = 0\]</div>
+<p>Similarly , for multiple constraints</p>
+<div class="arithmatex">\[\alpha_i^* g_i(w^*) = 0 \quad \forall i\]</div>
+<p>Also , <span class="arithmatex">\(g(w^*) = 1 - (w^T x_i)y_i\)</span> , this means the above equation 
+can also be written as,
+$$ \alpha_i ( 1 - (w^T x_i)y_i) = 0 \quad \forall i $$</p>
+<p>Now, according to Complementary Slackness , if <span class="arithmatex">\(\alpha_i &gt; 0\)</span> , then
+<span class="arithmatex">\(1 - (w^T x_i)y_i = 0\)</span>,</p>
+<div class="arithmatex">\[ \boxed{(w^T x_i)y_i = 1} \]</div>
+<p>From the above equation we can <strong>conclude</strong> that,
+points which have <span class="arithmatex">\(\alpha_i &gt; 0\)</span> lie on some line denoted by <span class="arithmatex">\((w^T x_i)y_i = 1\)</span>.
+This means that the points which contribute to the best <span class="arithmatex">\(w^*\)</span> only lie on the 
+<span class="arithmatex">\((w^T x_i)y_i = 1\)</span> line. Rest of the datapoints which dont lie on this line do
+not matter for formulation of <span class="arithmatex">\(w^*\)</span>.</p>
+<ul>
+<li>Only the points that are on the "Supporting" hyperplane (<span class="arithmatex">\((w^T x_i)y_i = 1\)</span>)
+contribute to <span class="arithmatex">\(w^*\)</span>.</li>
+<li>These special points are called supoort vectors.</li>
+<li>Hence , this algorithm is called "Support Vector Machine (SVM)".</li>
+<li><span class="arithmatex">\(w^*\)</span> is a sparse linear combination of the datapoints.</li>
+</ul>
+<h3 id="kernalization-of-svm">Kernalization of SVM</h3>
+<p>Given a point <span class="arithmatex">\(x_\text{test}\)</span> the prediction for that point is ,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+(w^*)^T x_\text{test} &amp;= \left( \sum_{i=1}^n \alpha_i \; x_i y_i  \right)^T x_\text{test} \\
+&amp;= \sum_{i=1}^n \alpha_i \; y_i (x_i^T x_\text{test}) \\
+(w^*)^T \phi(x_\text{test}) &amp;= \sum_{i=1}^n \alpha_i \; y_i K(x_i , x_\text{test})
+\end{split}
+\end{equation*}\]</div></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Types of Models - Machine Learning Theory</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <link href="../stylesheets/extra.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Machine Learning Theory</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Machine Learning Theory</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM/" class="nav-link">Support Vector Machine</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM2/" class="nav-link">SVM2</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">Types of Models</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../classification/" class="nav-link">Classification</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../clustering/" class="nav-link">Clustering</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../estimation/" class="nav-link">Estimation</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../kernel_pca/" class="nav-link">Kernel PCA</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../pca/" class="nav-link">Principal Component Analysis (PCA)</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../perceptron_learning/" class="nav-link">Logistic Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../regression/" class="nav-link">Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../supervised_learning/" class="nav-link">Supervised Learning</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Img <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../img/Representation%20Learning/" class="dropdown-item">Principal Component Analysis (PCA)</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../SVM2/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../classification/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#types-of-models" class="nav-link">Types of Models</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#generative-model-based-algorithm" class="nav-link">Generative Model-Based Algorithm</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="types-of-models">Types of Models</h1>
+<h2 id="generative-model-based-algorithm">Generative Model-Based Algorithm</h2>
+<p>For a dataset <span class="arithmatex">\(D= \{ (x_1,y_1), (x_2,y_2), ... (x_n,y_n) \}\)</span>,
+let <span class="arithmatex">\(x\)</span> and <span class="arithmatex">\(y\)</span> both be binary features such that <span class="arithmatex">\(x_i \in \{ 0,1 \}^d\)</span>
+and <span class="arithmatex">\(y_i \in \{ 0,1 \}\)</span></p>
+<blockquote>
+<p>Can features be binary? Does it even have an real life uses?</p>
+<p>The features can be binary and usually represent Yes/No type 
+question. One of the examples is of spam classification of mail 
+which we will be doing now.</p>
+</blockquote>
+<h3 id="spam-classifcication">Spam Classifcication</h3>
+<p>For the spam classification of emails we will have to make <span class="arithmatex">\(d\)</span> 
+length featuers for each email , even when the lengths and words 
+of emails are different.</p>
+<p>One of the ways we could do this is to make a very very long 
+vector/list which stores the poisition of each word in a 
+dictionary in ascending order.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>Lets say (for simplicity) our dictionary has 4 words,
+["Welcome", "to" , "earth" , "aliens"]. Although, the 
+words arent ordered here, our feature vectors/lists will be 
+ordered.</p>
+<p>Now lets say that our mail has the following 2 words, "Welcome Aliens".
+We will encode it in such a way that each feature represents the poisition 
+and occurence of the word in dictionary.</p>
+<p>Feature vector of <span class="arithmatex">\(d\)</span> length for "Welcome Aliens" will be,
+[1 , 0 , 0 , 1].</p>
+</div>
+<p>To do Generative Modeling for our <span class="arithmatex">\(d\)</span> length feature vectors,
+our next step would be assign probabilities to each word for 
+being in the spam and non-spam category.</p>
+<p>In other words each feature (<span class="arithmatex">\(x\)</span>) has 2 possibilities of being 
+spam or non-spam (<span class="arithmatex">\(y\)</span>). Our task at hand is to assign probabilities
+to all the features with all the possible combinations (2).</p>
+<div class="arithmatex">\[P(x,y) = \underbrace{P(x)}_{P (\text{email})} \times \underbrace{ P(y|x)}_{ P( \text{spam|email})}
+= \underbrace{ P(y)}_{ P( \text{spam})} \times \underbrace{ P(x|y)}_{ P( \text{email|spam})}\]</div>
+<blockquote>
+<p>There are several advantages to writing <span class="arithmatex">\(P(x,y)\)</span> in such a way,
+though we only care about at the end of the day is <span class="arithmatex">\(P(y|x)\)</span> , that is , given a feature vector 
+what is probability it is spam or not spam.</p>
+<p>If we already know the structure of <span class="arithmatex">\(P(y|x)\)</span> we can ignore the probability of <span class="arithmatex">\(P(x)\)</span> , 
+as it doesnt help us much with the predicition of a new test datapoint.
+So in some sense, we can just do a discriminative model for <span class="arithmatex">\(P(y|x)\)</span> , instead of 
+modeling <span class="arithmatex">\(P(y|x)\)</span> and <span class="arithmatex">\(P(x)\)</span>.</p>
+</blockquote>
+<p>In the second equation (<span class="arithmatex">\(P(x|y) \times P(y)\)</span>) , we arent assuming a specific 
+structure for <span class="arithmatex">\(y\)</span> given <span class="arithmatex">\(x\)</span> , instead we assume how labels are generated which 
+is <span class="arithmatex">\(P(y)\)</span>. Basically , we are assuming how to the structure/email will be given 
+that we know the email is spam or not spam.</p>
+<p>This is a more meaningful assumption as we have some way of understanding
+for how the email will look like given that it is spam or not spam.
+So now we will be modeling for <span class="arithmatex">\(P(y)\)</span> and <span class="arithmatex">\(P(x|y)\)</span>.</p>
+<h3 id="generative-story-for-email-given-label">Generative Story for Email Given Label</h3>
+<p>To make a generative model we will now make generative story 
+to train our model. Our generative story will have 2 steps,</p>
+<ul>
+<li><strong>Step 1</strong>: Decide the label of the email by tossing a coin. <span class="arithmatex">\(P(y_i = 1) = p\)</span></li>
+<li>
+<p><strong>Step 2</strong>: Decide the features of the email using the label in previous step. 
+<span class="arithmatex">\(P(x_i | y_i)\)</span></p>
+</li>
+<li>
+<p>In Step1 we are basically tossing a coin and if (lets say) comes out to be 
+heads , we say that this email is spam with some probability <span class="arithmatex">\(P\)</span>. The Step1 
+is deciding on which type of email (spam or non-spam) are we trying to generate.</p>
+</li>
+<li>
+<p>In Step2 we are basically generating the email itself for a set of words with 
+different probabilities (which sum upto 1) given we know which kind of email it is
+from Step1.</p>
+</li>
+</ul>
+<p><img alt="" src="../img/generative_model.png" /></p>
+<p>We follow the <strong>Step1</strong> and <strong>Step2</strong> from our algorithm above,
+and generate an email of features with <span class="arithmatex">\(d\)</span> length.</p>
+<p>Now lets say our dictionary only had <span class="arithmatex">\(3\)</span> words, so the total
+number of possible feature vectors will be <span class="arithmatex">\(2^{d=3} = 8\)</span>, each 
+feature can take 2 values (0,1).</p>
+<p>For our spam category, the words like "lottery" , "win" will have
+a higher probability as features than the non-spam category.</p>
+<p><strong>Note</strong> that the probability of each feature in a category represents 
+its chance of occurence within that specific category.</p>
+<p>Even if the feature vectors  on both the categories are the same , 
+the sets of probabilities are different for both of them. Some of 
+the probabilities might even be zero for for some features in (lets say)
+spam category when compared to the non-spam category.</p>
+<blockquote>
+<p>Now if we want to learn a model from the above algorithm , 
+we need to consider how many parameters are there for this coin 
+and 2 dice.</p>
+</blockquote>
+<ul>
+<li>The coin has probability <span class="arithmatex">\(p\)</span> , so thats 1 of the parameters.</li>
+<li>The spam dice has <span class="arithmatex">\(d\)</span> probabilities , each probability coressponding 
+to the combination of the features . Each feature has 2 possibilities (0,1),
+for <span class="arithmatex">\(d\)</span> number of features we will have <span class="arithmatex">\(2^d\)</span> parameters. 
+We know that all the probabilities sum upto 1 , 
+which means we can always find out the <span class="arithmatex">\(d^{\text{th}}\)</span> probability 
+using <span class="arithmatex">\(2^d-1\)</span> probabilities. Therefore at the end we are left with 
+<span class="arithmatex">\(2^d -1\)</span> probabilities.</li>
+<li>The non-spam dice is the same as spam dice just the probabilities of the 
+features is different , hence we will also have <span class="arithmatex">\(2^d-1\)</span> parameters for non-spam 
+dice.</li>
+</ul>
+<p>Our total number of parameters will be <span class="arithmatex">\(1 + (2^d -1) + (2^d -1) = 2^{d+1} - 1\)</span>.</p>
+<p>We can see that as we increase our number of features , the number of parameters 
+increase exponentially. This is simply too many parameters to handle/compute.</p>
+<p>If our dictionary had 10000 words , our parameters to compute would be 
+<span class="arithmatex">\(2^10000\)</span> , to put that into perpective , this number is greater than the 
+number of atoms in the entire observable universe.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

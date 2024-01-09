@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Supervised Learning - Machine Learning Theory</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <link href="../stylesheets/extra.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Machine Learning Theory</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Machine Learning Theory</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM/" class="nav-link">Support Vector Machine</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM2/" class="nav-link">SVM2</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Types%20of%20Models/" class="nav-link">Types of Models</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../classification/" class="nav-link">Classification</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../clustering/" class="nav-link">Clustering</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../estimation/" class="nav-link">Estimation</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../kernel_pca/" class="nav-link">Kernel PCA</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../pca/" class="nav-link">Principal Component Analysis (PCA)</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../perceptron_learning/" class="nav-link">Logistic Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../regression/" class="nav-link">Regression</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">Supervised Learning</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Img <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../img/Representation%20Learning/" class="dropdown-item">Principal Component Analysis (PCA)</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../regression/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../img/Representation%20Learning/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#supervised-learning" class="nav-link">Supervised Learning</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#linear-regression" class="nav-link">Linear Regression</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#optimizing-the-error-function" class="nav-link">Optimizing the Error Function</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#geometric-interpretation-of-linear-regression" class="nav-link">Geometric Interpretation of Linear Regression</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#gradient-descent" class="nav-link">Gradient Descent</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#kernel-regression" class="nav-link">Kernel Regression</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#probabilistic-view-of-linear-regression" class="nav-link">Probabilistic view of Linear Regression</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="supervised-learning">Supervised Learning</h1>
+<p>For a bunch of datapoints <span class="arithmatex">\(\{x_1 , x_2 , .... x_n \} \;\;\;\; x_i \in \mathbb{R}^d\)</span> 
+are called features/attributes and <span class="arithmatex">\(\{y_1 , y_2 , .... y_n  \}\)</span> corresponding to the 
+datapoints are called the labels. These labels provide "supervision" for our 
+algorithms.</p>
+<p>These labels can take different types of values</p>
+<ul>
+<li><strong>Binary Classification</strong>: Where the labels take only two values and they 
+come from <span class="arithmatex">\(\{+1 , -1 \}\)</span>.</li>
+<li><strong>Multiclass Classification</strong> : Where the labels take multiples values/classes from a set 
+like <span class="arithmatex">\(\{0,1,2,.....9 \}\)</span>.</li>
+</ul>
+<h2 id="linear-regression">Linear Regression</h2>
+<p>For input/training data <span class="arithmatex">\(\{x_1 , x_2 , .... x_n \} \;\;\;\; x_i \in \mathbb{R}^d\)</span> 
+our goal is to learn a function <span class="arithmatex">\(h : \mathbb{R}^d \to \mathbb{R}\)</span> which converts
+a feature to a label.</p>
+<blockquote>
+<p>There are many functions which map <span class="arithmatex">\(\mathbb{R}^d \to \mathbb{R}\)</span> , so 
+how do we measure the "goodness" of a function?</p>
+</blockquote>
+<p>To measure the error of a function </p>
+<div class="arithmatex">\[\text{error}(h) = \sum_{i=1}^n (h(x_i) - y_i)^2 \]</div>
+<blockquote>
+<p>In the best case scenario , how small can this error be?</p>
+</blockquote>
+<p>0 is the least value the error function can take and it only happens 
+when <span class="arithmatex">\(h(x_i) = y_i \forall i\)</span></p>
+<blockquote>
+<p>However this <span class="arithmatex">\(h(x)\)</span> may not always be the best function for the mapping</p>
+</blockquote>
+<p>Some of the problems with <span class="arithmatex">\(h(x)\)</span> are </p>
+<ul>
+<li>To achieve 0 error , we always output the same label for each feature ,
+this <span class="arithmatex">\(h(x)\)</span> "memorizes" the mapping from <span class="arithmatex">\(\mathbb{R}^d\)</span> to <span class="arithmatex">\(\mathbb{R}\)</span> and this 
+function may not always be useful.
+Functions like this tend to overfit the training data and produce considerable 
+errors on testing data.</li>
+</ul>
+<blockquote>
+<p>How to prevent overfitting of training data?</p>
+</blockquote>
+<p>Our goal now is to use the same squared error function , 
+but impose a certain structure to reduce our search space.</p>
+<p>One of the simplest structures we could impose is a linear 
+structure.</p>
+<p><img alt="" src="../img/linear_structure.png" /></p>
+<p>Now our modified goal is </p>
+<div class="arithmatex">\[\underset{h_w \in H_{\text{linear}}}{\min} \sum_{i=1}^{n} (h_w(x_i) - y_i)^2\]</div>
+<p>or equivalently </p>
+<div class="arithmatex">\[\underset{w \in \mathbb{R}^d}{\min} \sum_{i=1}^{n} (w^Tx_i - y_i)^2\]</div>
+<h2 id="optimizing-the-error-function">Optimizing the Error Function</h2>
+<blockquote>
+<p>Now that we have identified a function for our 
+algorithm , we should think of a way to optimize this function </p>
+</blockquote>
+<p>The above function can be rewritten as follows </p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\underset{w \in \mathbb{R}^d}{\min} &amp; {||X^Tw - y||}^2 \\
+\underset{w \in \mathbb{R}^d}{\min} &amp; (X^Tw - y)^T(X^Tw - y) \\
+\end{split}
+\end{equation*}\]</div>
+<p>The above equation is an unconstrained optimization problem ,
+to minimize the equation we will now take the derivative and 
+equate it to zero.</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+f(w) &amp;= (X^Tw - y)^T(X^Tw - y) \\
+\nabla f(w) &amp;= 2 (XX^T)w - 2(Xy) \\
+(XX^T)w^* &amp;= Xy \\
+w^* &amp;= (XX^T)^\dagger(Xy)
+\end{split}
+\end{equation*}\]</div>
+<h2 id="geometric-interpretation-of-linear-regression">Geometric Interpretation of Linear Regression</h2>
+<p>Lets say for a dataset with number of features to be 2 
+(<span class="arithmatex">\(d=2\)</span>) and number of points be 3 (<span class="arithmatex">\(n=3\)</span>).</p>
+<blockquote>
+<p>How can we interpret <span class="arithmatex">\(w^* = (XX^T)^\dagger(Xy)\)</span> geometrically?</p>
+</blockquote>
+<p>Now if we draw an <span class="arithmatex">\(n\)</span> dimensional space , in our case its <span class="arithmatex">\(n =3\)</span>,
+the first vector that we will have will be in <span class="arithmatex">\(\mathbb{R}^3\)</span> and the other 
+vector also in <span class="arithmatex">\(\mathbb{R}^3\)</span>.</p>
+<p><img alt="" src="../img/features_plot.png" /></p>
+<video width="800"  controls>
+    <source src="../videos/FeaturesLyingIn2DSpace.mp4" type="video/mp4">
+</video>
+
+<p><strong>Note</strong> that we are not plotting the the datapoints but the features themselves.</p>
+<p>Now we plot the label in the same <span class="arithmatex">\(\mathbb{R}^3\)</span> subspace.
+<img alt="" src="../img/label_plot.png" /></p>
+<video width="800"  controls>
+    <source src="../videos/FeaturesLyingIn2DSpace_2.mp4" type="video/mp4">
+</video>
+
+<p>We can see that the linear combinations of the features (green vectors)
+will lie in the same plane as the features themselves.</p>
+<p>Now if we also plot the label vector (<span class="arithmatex">\(y\)</span>) onto the same <span class="arithmatex">\(\mathbb{R}^3\)</span>
+subspace , it may or may not lie in the same plane as of the features themselves.</p>
+<p>In the case it does not lie in the plane spanned by the features , we will find the closest projection
+of <span class="arithmatex">\(y\)</span> onto the plane.</p>
+<p><img alt="" src="../img/label_projection.png" /></p>
+<video width="800"  controls>
+    <source src="../videos/ProjectionOfLabel.mp4" type="video/mp4">
+</video>
+
+<p>We also know that the red point will also be a linear combination of the features 
+as it lies in the same plane as of the features themselves.</p>
+<p>So for some real numbers like <span class="arithmatex">\(\alpha^*_1 , \alpha^*_2\)</span> , the red point can be 
+expressed as the linear combination of features (<span class="arithmatex">\(\alpha^*_1f_1 + \alpha^*_2f_2\)</span>)</p>
+<div class="arithmatex">\[\implies \alpha^*_1f_1 + \alpha^*_2f_2 = X^T \alpha^*\]</div>
+<p><img alt="" src="../img/label_projection2.png" /></p>
+<p>We also know that <span class="arithmatex">\(X^T\alpha^*\)</span> and <span class="arithmatex">\(y - X^T \alpha^*\)</span> are orthogonal to each other.</p>
+<p><img alt="" src="../img/orthogonal_vectors.png" /></p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\implies (X^T \alpha^*)^T(y - X^T \alpha^*) &amp;= 0 \\
+y^TX^T \alpha^* - {\alpha^*}^T(XX^T) \alpha^* \\
+\end{split}
+\end{equation*}\]</div>
+<p>Now what happens if we put <span class="arithmatex">\(w^* = \alpha^*\)</span> , where 
+<span class="arithmatex">\(w^* = {(XX^T)}^\dagger Xy\)</span></p>
+<p>The new equation will be,</p>
+<div class="arithmatex">\[y^T X^T ((XX^T)^\dagger Xy) - ((XX^T)^\dagger Xy)^T (XX^T) (XX^T)^\dagger Xy = 0\]</div>
+<p>With this equation we basically prove that the solution <span class="arithmatex">\(\alpha^*\)</span> we were looking for 
+is the same as <span class="arithmatex">\(w^*\)</span></p>
+<h2 id="gradient-descent">Gradient Descent</h2>
+<blockquote>
+<p>We know that <span class="arithmatex">\(w^*\)</span> has a closed form solution which is <span class="arithmatex">\(w^* = (XX^T)^\dagger Xy\)</span>,
+but it is computationally expensive to compute <span class="arithmatex">\(w^*\)</span> as it takes <span class="arithmatex">\(O(d^3)\)</span> iterations.
+Also, solving for <span class="arithmatex">\(w^*\)</span> is an unconstrained optimization problem , which can be solved
+using the method of Gradient Descent.</p>
+</blockquote>
+<p>Gradient Descent is an iterative way to find minimizers of functions using just
+first order information , which is gradient of the function (vector of partial 
+derivatives).</p>
+<div class="arithmatex">\[ w^{t+1} = w^t - \eta_t \nabla f(w^t) \]</div>
+<blockquote>
+<p>The gradient tells you the direction where function will increase , instead ,
+when doing gradient descent we move opposite to the direction of the gradient 
+along the function , where it gradually decreases.</p>
+<ul>
+<li><span class="arithmatex">\(\eta_t\)</span> is a scalar value and it is the step-size we take to move along the function.</li>
+<li><span class="arithmatex">\(f(w^t)\)</span> gives us the direction of the gradient.</li>
+</ul>
+<p>After some iterations , we eventually reach the global minima of the function.</p>
+</blockquote>
+<p>Our original Mean Squared Error function was,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+f(w) &amp;= ||Xw - y||^2 = \sum_{i=1}^{n} (w^T x_i - y_i)^2 \\
+\nabla f(w) &amp;= 2 (XX^T)w - 2Xy \\
+\end{split}
+\end{equation*}\]</div>
+<p>Now we can use this gradient of <span class="arithmatex">\(f(w)\)</span> in the gradient descent equation,</p>
+<div class="arithmatex">\[ w^{t+1} = w^t - \eta_t [2(XX^T)w - 2Xy] \]</div>
+<p>This solves the problem of not having to compute the inverse of <span class="arithmatex">\(XX^T\)</span> , which
+takes <span class="arithmatex">\(O(d^3)\)</span> iterations. Using gradient descent to calculate <span class="arithmatex">\(w^*\)</span> makes it
+less computationally expensive.</p>
+<blockquote>
+<p>Now what to do if <span class="arithmatex">\(n\)</span> is too large, we know that <span class="arithmatex">\(XX^T\)</span> is a <span class="arithmatex">\(d \times n * n * \times d\)</span>
+matrix , just to calculate <span class="arithmatex">\(XX^T\)</span> there is an inner dependency of <span class="arithmatex">\(n\)</span>, hence it becomes 
+computationally expensive to solve for <span class="arithmatex">\(XX^T\)</span>.</p>
+<p>Is there any way we can avoid computing <span class="arithmatex">\(XX^T\)</span>?</p>
+</blockquote>
+<h3 id="stochastic-gradient-descent">Stochastic Gradient Descent</h3>
+<p>for <span class="arithmatex">\(t = 1,2,3 ...... T\)</span> </p>
+<ul>
+<li>At each step sample a bunch (<span class="arithmatex">\(k\)</span>) of datapoints uniformly at random from the set of 
+all datapoints.</li>
+<li>Pretend as if this sample (<span class="arithmatex">\(k\)</span> datapoints) is the entire dataset and take a gradient 
+step with respect to it, </li>
+</ul>
+<div class="arithmatex">\[2(\tilde{X}\tilde{X}^T w^t - \tilde{X} \tilde{y})\]</div>
+<p>where <span class="arithmatex">\(\tilde{X}\)</span> is the sampled (<span class="arithmatex">\(k\)</span>) datapoints and <span class="arithmatex">\(\tilde{y}\)</span> are the labels corresponding 
+to the datapoints.</p>
+<blockquote>
+<p>This makes calculating <span class="arithmatex">\(XX^T\)</span> managable as we only take <span class="arithmatex">\(k\)</span> points at a time.</p>
+</blockquote>
+<p>After <span class="arithmatex">\(t\)</span> rounds , use </p>
+<div class="arithmatex">\[ w^T_{\text{SGD}} = \frac{1}{T} \sum_{i=1}^{t} w^t \]</div>
+<blockquote>
+<p>At the end we basically take the average of the <span class="arithmatex">\(w^t\)</span> obtained after several iterations ,
+though the direction of descent may be noisy at first but in a typical case the average usually
+gives out the <span class="arithmatex">\(w^*\)</span> with least possible noise.</p>
+</blockquote>
+<div class="admonition note">
+<p>Stochastic Gradient Descent is always guaranteed to converge to optima with high
+probability.</p>
+</div>
+<h2 id="kernel-regression">Kernel Regression</h2>
+<p>Our goal here is to map the data points to a higher dimensional space and 
+then learn a linear model in higher dimension (regressor) without explicitly
+computing the higher dimensional mappings.</p>
+<p>The solution for <span class="arithmatex">\(w^*\)</span> in <span class="arithmatex">\(w^* = (XX^T)^ \dagger Xy\)</span> lies in the subspace spanned
+by the datapoints.</p>
+<p>It can also be seen as <span class="arithmatex">\(w^*\)</span> lying in a <span class="arithmatex">\(\mathbb{R}^3\)</span> subspace spanned by the datapoints.</p>
+<blockquote>
+<p>How?</p>
+</blockquote>
+<p><img alt="" src="../img/kernel_reg_datapoints.png" /></p>
+<video width="800"  controls>
+    <source src="../videos/SpaceSpannedByDatapoints.mp4" type="video/mp4">
+</video>
+
+<p>Lets say that there are some data points in <span class="arithmatex">\(\mathbb{R}^3\)</span> , even though they are 3-dimensional 
+vectors , lets assume that they all line in some 2-d plane (in our case its the green area above)</p>
+<p><img alt="" src="../img/w_star.png" /></p>
+<video width="800"  controls>
+    <source src="../videos/SpaceSpannedByDatapoints_2.mp4" type="video/mp4">
+</video>
+
+<p>For arguments sake , lets assume that our <span class="arithmatex">\(w^*\)</span> lies outside the (green) plane. To minimize 
+the error we will now take a point which is closest to <span class="arithmatex">\(w^*\)</span> which lies on the same (green) plane.</p>
+<p>Here , <span class="arithmatex">\(\tilde{w}\)</span> is the projection of <span class="arithmatex">\(w^*\)</span>/ closest point to <span class="arithmatex">\(w^*\)</span> which lies in the 
+same (2-d) space spanned by the datapoints.</p>
+<p>Now , lets see what's the difference between error functions of <span class="arithmatex">\(w^*\)</span> and <span class="arithmatex">\(\tilde{w}\)</span> </p>
+<div class="arithmatex">\[\sum_{i=1}^n ({w^*}^Tx_i - y_i) \;\;\;\;\; \text{and} \;\;\;\;\; \sum_{i=1}^n ({\tilde{w}}^Tx_i - y_i)\]</div>
+<p><span class="arithmatex">\(w^*\)</span> can be written as the sum of <span class="arithmatex">\(\tilde{w}\)</span> and the vector perpendicular to <span class="arithmatex">\(\tilde{w}\)</span> , which is 
+<span class="arithmatex">\(\tilde{w}_{\perp}\)</span></p>
+<p><strong>Note</strong> that <span class="arithmatex">\(\tilde{w}_{\perp}\)</span> is perpendicular to the (2-d) plane itself , which means it 
+is perpendicular / orthogonal to all the points which lie in the plane (datapoints).</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+w^* &amp;= \tilde{w} + \tilde{w}_{\perp} \\
+{w^*}^Tx_i &amp;= {(\tilde{w} + \tilde{w}_{\perp} )}^T x_i \\
+&amp;= \tilde{w} x_i + \tilde{w}_{\perp}^T x_i  \\
+&amp;= \tilde{w} x_i \;\;\;\;\;\; \forall i \\
+\end{split}
+\end{equation*}\]</div>
+<p><span class="arithmatex">\(\tilde{w}_{\perp}^T x_i\)</span> will become 0 as explained above. </p>
+<p>Now we see that the error for both <span class="arithmatex">\(w^*\)</span> and <span class="arithmatex">\(\tilde{w}\)</span> is exactly 
+the same.</p>
+<p>It can also be seen that <span class="arithmatex">\(w^*\)</span> is some combination of the datapoints,
+which can be written as </p>
+<div class="arithmatex">\[w^* = X \alpha^*\]</div>
+<p>for some <span class="arithmatex">\(\alpha^* \in \mathbb{R}^n\)</span> </p>
+<p>We also know that ,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+w^* &amp;= (XX^T)^\dagger Xy \\
+X \alpha^* &amp;= (XX^T)^\dagger Xy \\
+(XX^T) X \alpha^* &amp;= (XX^T)(XX^T)^\dagger Xy \\
+(XX^T) X \alpha^* &amp;=  Xy \\
+X^T(XX^T) X \alpha^* &amp;= X^TXy \\
+(X^T X)^2 \alpha^* &amp;= X^TXy \\
+K^2 \alpha^* &amp;= Ky \\ 
+\alpha^* &amp;= K^{-1}y \\
+\end{split}
+\end{equation*}\]</div>
+<p><span class="arithmatex">\(K = X^T X\)</span> , is the kernel matrix.</p>
+<h3 id="prediction">Prediction</h3>
+<p>We know that,</p>
+<div class="arithmatex">\[ w = \sum_{i=1}^n \alpha_i x_i \]</div>
+<p>Also Prediction <span class="arithmatex">\(= w^T x_{\text{test}}\)</span> ,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+w^T x_\text{test} &amp;= (\sum_{i=1}^n \alpha_i x_i )^T x_\text{test} \\
+&amp;= \sum_{i=1}^n \alpha_i (x_i^T x_\text{test}) \\
+&amp;= \sum_{i=1}^n ( \phi(x_i)^T \phi(x_\text{test}) ) \\
+&amp;= \sum_{i=1}^n \alpha_i K (x_i , x_\text{test}) \\
+\end{split}
+\end{equation*}\]</div>
+<p>where <span class="arithmatex">\(\alpha_i\)</span> shows how important is <span class="arithmatex">\(i^\text{th}\)</span> point 
+towards <span class="arithmatex">\(w^*\)</span> and <span class="arithmatex">\(K(x_i , x_\text{test})\)</span> shows how similar
+is <span class="arithmatex">\(x_\text{test}\)</span> to <span class="arithmatex">\(x_i\)</span>.</p>
+<h2 id="probabilistic-view-of-linear-regression">Probabilistic view of Linear Regression</h2>
+<p>In a linear regression problem we know that , <span class="arithmatex">\(x \in \mathbb{R}^d\)</span> , <span class="arithmatex">\(y \in \mathbb{R}\)</span> 
+for a set of datapoints <span class="arithmatex">\(\{ (x_1 , y_1) , (x_2 , y_2) , ..... (x_n , y_n) \}\)</span>.</p>
+<p>The probabilistic we are going to assume is as follows,</p>
+<div class="arithmatex">\[ y|x \sim w^T x + \epsilon \]</div>
+<p>For a given feature theres is an <em>unknown but fixed</em> <span class="arithmatex">\(w \in \mathbb{R}^d\)</span> and 
+<span class="arithmatex">\(\epsilon\)</span> is a zero-mean gaussian (<span class="arithmatex">\(\mathcal{N}(0 , \sigma^2)\)</span>)noise.</p>
+<blockquote>
+<p>Now we can view this as an estimation problem and solve it using the 
+maximum likelihood approach.</p>
+</blockquote>
+<p>The likelihood function will be ,</p>
+<div class="arithmatex">\[\begin{equation*}
+\begin{split}
+\mathcal{L}(w ; \substack{x_1 , x_2 , ... x_n \\ y_1 , y_2 , ... y_n} ) &amp;= \prod_{i=1}^n e^{- \frac{(w^Tx_i - y_i)^2}{2 \sigma^2}} \times \frac{1}{\sqrt{2 \pi} \sigma} \\
+\log \mathcal{L}(w ; \substack{x_1 , x_2 , ... x_n \\ y_1 , y_2 , ... y_n} ) &amp;= \sum_{i=1}^n  \frac{-(w^Tx_i - y_i)^2}{2 \sigma^2} \times \frac{1}{\sqrt{2 \pi} \sigma} \\
+\\
+\text{equivalently} \\
+\\
+&amp;= \underset{w}{\max} \sum_{i=1}^{n} - (w^T x_i - y_i)^2 \\
+&amp;= \underset{w}{\min} \sum_{i=1}^n (w^Tx_i - y_i)^2 \\
+\end{split}
+\end{equation*}\]</div>
+<p><strong>Note</strong> that the mean of the distribution becomes <span class="arithmatex">\(w^Tx + 0\)</span> as <span class="arithmatex">\(\epsilon\)</span> is a 
+zero-mean gaussian distribution , which makes the final distribution to be 
+<span class="arithmatex">\(\mathcal{N}(w^Tx , \sigma^2)\)</span></p>
+<p>Also, we ignored the constants in the later half of the derivation because they are,
+you guessed it , constants. :p</p>
+<p>Finally from this we can conclude that <span class="arithmatex">\(w^* = w_\text{ML} = (XX^T)^\dagger Xy\)</span></p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

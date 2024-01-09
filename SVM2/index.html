@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>SVM2 - Machine Learning Theory</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <link href="../stylesheets/extra.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Machine Learning Theory</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Machine Learning Theory</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../SVM/" class="nav-link">Support Vector Machine</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">SVM2</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Types%20of%20Models/" class="nav-link">Types of Models</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../classification/" class="nav-link">Classification</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../clustering/" class="nav-link">Clustering</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../estimation/" class="nav-link">Estimation</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../kernel_pca/" class="nav-link">Kernel PCA</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../pca/" class="nav-link">Principal Component Analysis (PCA)</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../perceptron_learning/" class="nav-link">Logistic Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../regression/" class="nav-link">Regression</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../supervised_learning/" class="nav-link">Supervised Learning</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Img <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../img/Representation%20Learning/" class="dropdown-item">Principal Component Analysis (PCA)</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../SVM/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../Types%20of%20Models/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="2"><a href="#dual-formation-for-soft-margin-svm" class="nav-link">Dual Formation for Soft Margin SVM</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="2"><a href="#complementary-slackness-conditions-for-soft-margin-svm" class="nav-link">Complementary Slackness Conditions for Soft-Margin SVM</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="2"><a href="#summary-for-soft-margin-svm" class="nav-link">Summary for Soft-Margin SVM</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="2"><a href="#overfitting-and-underfitting" class="nav-link">Overfitting and Underfitting</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="2"><a href="#bagging-boostrap-aggregation" class="nav-link">Bagging (Boostrap Aggregation)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="2"><a href="#boosting-adaptive-boosting" class="nav-link">Boosting (Adaptive Boosting)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h2 id="dual-formation-for-soft-margin-svm">Dual Formation for Soft Margin SVM</h2>
+<p>We know that SVM works well on a linearly separable dataset, but our
+goal was to accommodate outliers/noise in the dataset and hence we
+created a new formulation from SVM called "Soft Margin SVM" , given
+by the formula,</p>
+<div class="arithmatex">\[\begin{split} 
+\underset{w \in \mathbb{R}^d}{\min} \frac{1}{2}||w||^2 + C \sum_{i=1}^n \xi_i  \\
+\text{such that } (w^T x_i)y_i + \xi_i \geq 1 \;\; \forall i \\
+\xi_i \geq 0 \;\; \forall i \\
+\end{split}\]</div>
+<p>We want to kernalize this equation so that it is able to 
+perform even on "non-linear" datasets.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p><img alt="" src="../img/QuadraticStructure.svg" /></p>
+<p>This example depicts how we want our "Kernalized Soft Margin SVM" to be.</p>
+<ul>
+<li>It should be able to work on a non-linearly separable dataset.</li>
+<li>It should also be able to identify "non-linear" structures within 
+the dataset.</li>
+</ul>
+</div>
+<p>The first step towards our goal would be to form a "Dual Problem" for the 
+"Soft Margin SVM" equation.</p>
+<p>To formulate the "Dual Problem" we will first make a langrangian function,</p>
+<div class="arithmatex">\[ \mathcal{L}(w, \xi , \alpha , \beta) = 
+\frac{1}{2}||w||^2 + C \sum_{i=1}^{n}\xi_i + \sum_{i=1}^n \alpha_i(1 - w^T x_i y_i - \xi_i) 
++ \sum_{i=1}^n \beta_i (- \xi_i)\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li><span class="arithmatex">\(\alpha\)</span> corresponds to the first constraint (<span class="arithmatex">\((w^T x_i)y_i + \xi_i \geq 1\)</span>).</li>
+<li><span class="arithmatex">\(\beta\)</span> corresponds to the second constraint (<span class="arithmatex">\(\xi_i \geq 0\)</span>).</li>
+<li>The constraints are written in standard form , in the above equations.</li>
+</ul>
+</div>
+<p>Therefore , the "Dual Problem" will be,</p>
+<div class="arithmatex">\[ \underset{w , \xi}{\min} \left[ 
+\underset{\substack{\alpha \geq 0 \\ \beta \geq 0}}{\max} \frac{1}{2} 
+||w||^2 + C \sum_{i=1}^n \xi_i + \sum_{i=1}^n \alpha_i (1 - (w^T x_i)y_i - \xi_i)) + \sum_{i=1}^n \beta_i (- \xi_i)
+\right] \]</div>
+<p>For a fixed value <span class="arithmatex">\(\alpha\)</span> and <span class="arithmatex">\(\beta\)</span>,</p>
+<p>The derivative of "Dual Problem" with respect to <span class="arithmatex">\(w\)</span> will be,</p>
+<div class="arithmatex">\[ w^*_{\alpha , \beta} = \sum_{i=1}^n \alpha_i x_i y_i \label{w-star} \tag{1} \]</div>
+<p>The derivative of "Dual Problem" with respect to <span class="arithmatex">\(\xi\)</span> will be,</p>
+<div class="arithmatex">\[\begin{equation*}
+\tag{2}
+\begin{split}
+C + \alpha_i(-1) + \beta_i(-1) &amp;= 0 \\
+\alpha_i + \beta_i &amp;= C \\
+\end{split}
+\end{equation*}\]</div>
+<p>From Equation <strong>1</strong> and Equation <strong>2</strong> , Our new dual problem will be,</p>
+<div class="arithmatex">\[\boxed{\underset{\substack{\alpha \geq 0 \\ \beta \geq 0 \\ \alpha + \beta = C}}{\max} 
+\alpha^T I - \alpha^T Y^T X^TX Y \alpha}\]</div>
+<p><strong>Note</strong> that this is same as the dual problem we had in "SVM/Hard SVM".</p>
+<p><span class="arithmatex">\(\alpha \geq 0\)</span> and <span class="arithmatex">\(\alpha + \beta = C\)</span> , which means <span class="arithmatex">\(\beta\)</span> is restricting 
+the range of <span class="arithmatex">\(\alpha\)</span>, in other words , <span class="arithmatex">\(\alpha\)</span> can be at most <span class="arithmatex">\(C\)</span>.</p>
+<p>We can equivalently say that,</p>
+<div class="arithmatex">\[\boxed{\underset{0 \leq \alpha \leq C}{\max} 
+\alpha^T I - \alpha^T Y^T X^TX Y \alpha}\]</div>
+<h3 id="cases-of-different-value-of-c">Cases of Different Value of <span class="arithmatex">\(C\)</span></h3>
+<div class="admonition abstract">
+<p class="admonition-title">When <span class="arithmatex">\(C = 0\)</span></p>
+<p>If <span class="arithmatex">\(C = 0\)</span> , this means that <span class="arithmatex">\(\alpha = 0\)</span> , also from Equation <span class="arithmatex">\(\eqref{w-star}\)</span>,
+<span class="arithmatex">\(w^*_{\alpha , \beta} = 0\)</span>.</p>
+</div>
+<div class="admonition abstract">
+<p class="admonition-title">When <span class="arithmatex">\(C = \infty\)</span></p>
+<p>If <span class="arithmatex">\(C = \infty\)</span> , that means there is no upper bound on <span class="arithmatex">\(\alpha\)</span> and 
+the above "Dual Problem" becomes exactly the same as Hard-Margin SVM.</p>
+</div>
+<h2 id="complementary-slackness-conditions-for-soft-margin-svm">Complementary Slackness Conditions for Soft-Margin SVM</h2>
+<ul>
+<li>Let (<span class="arithmatex">\(w^* , \xi^*\)</span>) be the "Primal" optimal solutions.</li>
+<li>Let (<span class="arithmatex">\(\alpha^* , \beta^*\)</span>) be the "Dual" optimal solutions.</li>
+</ul>
+<h3 id="complementary-slackness-conditions">Complementary Slackness Conditions</h3>
+<p>At optimality , </p>
+<div class="arithmatex">\[\forall i \quad \alpha_i^* (1 - (w^{*^T} x_i)y_i - \xi_i^*) = 0 \label{CS1} \tag{1}\]</div>
+<div class="arithmatex">\[\forall i \quad \beta_i^* (- \xi_i^*) = 0 \label{CS2} \tag{2}\]</div>
+<h4 id="cases-for-complementary-slackness">Cases for Complementary Slackness</h4>
+<div class="admonition abstract">
+<p class="admonition-title">When <span class="arithmatex">\(\alpha_i^* = 0\)</span></p>
+<ul>
+<li><span class="arithmatex">\(\implies \beta_i^* = C\)</span> as <span class="arithmatex">\(\alpha_i^* + \beta_i^* = C\)</span>.</li>
+<li><span class="arithmatex">\(\implies \xi_i^* = 0\)</span> as <span class="arithmatex">\(\beta_i^* = C\)</span> (From <span class="arithmatex">\(\eqref{CS2}\)</span>)</li>
+<li>We know that , <span class="arithmatex">\(w^{*^T} x_i y_i + \xi_i^* \geq 1\)</span><ul>
+<li><span class="arithmatex">\(\implies w^{*^T} x_i y_i \geq 1\)</span> as <span class="arithmatex">\(\xi_i = 0\)</span></li>
+<li><span class="arithmatex">\(w^*\)</span> classifies <span class="arithmatex">\((x_i ,y_i)\)</span> correctly.
+<img alt="" src="../img/CS_Case1.svg" /></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonition abstract">
+<p class="admonition-title">When <span class="arithmatex">\(\alpha*_i \in (0,C)\)</span></p>
+<ul>
+<li><span class="arithmatex">\(\implies \beta_i^* \in (0,C)\)</span></li>
+<li><span class="arithmatex">\(\implies \xi_i^* = 0\)</span> (From <span class="arithmatex">\(\eqref{CS2}\)</span>)</li>
+<li><span class="arithmatex">\(\implies 1 - (w^{*^T}x_i)y_i - \xi_i = 0\)</span> (From <span class="arithmatex">\(\eqref{CS1}\)</span>)<ul>
+<li><span class="arithmatex">\(\implies 1 - (w^{*^T}x_i)y_i  = 0\)</span> as <span class="arithmatex">\(\xi_i^* = 0\)</span></li>
+<li><span class="arithmatex">\(\implies  (w^{*^T}x_i)y_i  = 1\)</span>
+<img alt="" src="../img/CS_Case2.svg" /></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonition abstract">
+<p class="admonition-title">When <span class="arithmatex">\(\alpha^*_i = C\)</span></p>
+<ul>
+<li>
+<p><span class="arithmatex">\(\implies \beta_i^* = 0\)</span> as <span class="arithmatex">\(\alpha_i^* + \beta_i^* = C\)</span></p>
+<ul>
+<li><span class="arithmatex">\(\xi_i^* \geq 0\)</span> as <span class="arithmatex">\(\beta_i^* = 0\)</span></li>
+</ul>
+</li>
+<li>
+<p><span class="arithmatex">\(1 - (w^{*^T}x_i)y_i + \xi_i = 0\)</span> (From <span class="arithmatex">\(\eqref{CS1}\)</span>)</p>
+<ul>
+<li><span class="arithmatex">\(\implies \xi_i^* = 1 - (w^{*^T}x_i)y_i\)</span></li>
+<li><span class="arithmatex">\(\implies 0 \leq 1 - (w^{*^T}x_i)y_i\)</span> as <span class="arithmatex">\(\xi_i^* \geq 0\)</span></li>
+<li><span class="arithmatex">\(\implies (w^{*^T}x_i)y_i \leq 1\)</span>
+    <img alt="" src="../img/CS_Case3.svg" /></li>
+<li><span class="arithmatex">\(w^*\)</span> will either classify the points incorrectly or</li>
+<li><span class="arithmatex">\(w^*\)</span> will correctly classify the points but not with enough margin.</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="summary-for-soft-margin-svm">Summary for Soft-Margin SVM</h2>
+<p>Lets see things from the "Primal" point of view,</p>
+<div class="admonition abstract">
+<p class="admonition-title"><span class="arithmatex">\((w^{*^T}x_i)y_i &lt; 1\)</span></p>
+<ul>
+<li>We know that, <span class="arithmatex">\((w^{*^T}x_i)y_i + \xi_i^* \geq 1\)</span></li>
+<li><span class="arithmatex">\(\implies \xi_i^* \geq 1 - (w^{*^T}x_i)y_i\)</span></li>
+<li><span class="arithmatex">\(\beta_i^* = 0\)</span> as <span class="arithmatex">\(\xi_i^* &gt; 0\)</span> (From <span class="arithmatex">\(\eqref{CS2}\)</span>)<ul>
+<li><span class="arithmatex">\(\alpha_i^* = C\)</span></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonition abstract">
+<p class="admonition-title"><span class="arithmatex">\((w^{*^T}x_i)y_i = 1\)</span></p>
+<ul>
+<li>We know that , <span class="arithmatex">\((w^{*^T}x_i)y_i + \xi_i^* \geq 1\)</span></li>
+<li><span class="arithmatex">\(\implies \xi_i^* \geq 1 - (w^{*^T}x_i)y_i\)</span></li>
+<li><span class="arithmatex">\(\implies \xi_i^* \geq 0\)</span> as  <span class="arithmatex">\((w^{*^T}x_i)y_i = 1\)</span><ul>
+<li><span class="arithmatex">\(\alpha_i^* \in [0,C]\)</span></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonition abstract">
+<p class="admonition-title"><span class="arithmatex">\((w^{*^T}x_i)y_i &gt; 1\)</span></p>
+<ul>
+<li><span class="arithmatex">\(\implies \underbrace{1 - (w^{*^T}x_i)y_i}_{&lt;0} - \underbrace{\xi_i^*}_{\leq 0} &lt; 0\)</span><ul>
+<li><span class="arithmatex">\(\implies \alpha_i^* = 0\)</span> (From <span class="arithmatex">\(\eqref{CS1}\)</span>)</li>
+</ul>
+</li>
+<li>Points which are strictly greater than 1 , do not constribute to <span class="arithmatex">\(w^*\)</span>.</li>
+</ul>
+</div>
+<h3 id="summary">Summary</h3>
+<p><img alt="" src="../img/Recap.svg" /></p>
+<p><img alt="" src="../img/AllCases.svg" /></p>
+<ul>
+<li>Black Points have either <span class="arithmatex">\(\gamma\)</span>(margin) greater than 1 or less than 1.<ul>
+<li>These points do not constribute to <span class="arithmatex">\(w^*\)</span></li>
+</ul>
+</li>
+<li>Blue Points are classified correctly but not with enough margin.</li>
+<li>From Orange Points there is nothing much to conclude except the fact 
+that they will lie on the hyperplane.</li>
+</ul>
+<p>The only points which contribute to our <span class="arithmatex">\(w^*\)</span> are either on the supporting
+hyperplane (Orange Points) or they are on the wrong side of supporting 
+hyperplane (Blue Points).</p>
+<p>Our assumption is that these (Blue and Orange) points will be much lesser than
+the other (Black) points. Hence, we will get a sparse solution.    </p>
+<h2 id="overfitting-and-underfitting">Overfitting and Underfitting</h2>
+<p>We will take a look at meta/ensemble classifiers. These type of classifying 
+techniques help in transforming "Weak Learners" into "Strong Learners".
+By "Weak Learners" we mean , algorithms which are better than random 
+performance but dont have high accuracy.</p>
+<p>To broaden our understanding about "Weak Learners" we will first 
+take a look at Overfitting and Underfitting,</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The relationship between input and output is assumed to be 
+some structure + noise.</p>
+<div class="arithmatex">\[ \text{Input} = \underbrace{\text{Structure + Noise}}_{\text{Output}} \]</div>
+<p>Error is given by,</p>
+<div class="arithmatex">\[\text{Error} = \text{Bias} + \text{Variance}\]</div>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p><img alt="" src="../img/OriginalDataset.svg" /></p>
+</div>
+</div>
+<h3 id="overfitting">Overfitting</h3>
+<p>Overfitting happens when our algorithm "fits noise" as a part of 
+the structure.</p>
+<p>Overfit models change a lot when theres a change in variance of the 
+dataset.These models suffer from high Variance.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>In the case of a Decision Tree , we can keep increasing the depth
+of the Decision Tree to an arbitrary amount to get the least 
+possible error on the training dataset. The problem with this 
+training method is that it may produce great results on the training
+dataset but its accuracy will reduce significantly when on testing
+dataset.</p>
+<p><figure markdown>
+<img alt="" src="../img/OverfitDataset.svg" />
+<figcaption>
+In the Overfit Dataset , the training error is zero. Even though the actual
+structure is sinusoidal the overfit dataset "fits noise" thinking that the
+noise is part of the structure.
+</figcaption></p>
+</div>
+<h3 id="underfitting">Underfitting</h3>
+<p>Underfitting is the opposite of Overfitting. It happens when our 
+algorithm assumes some part of the structure to be noise.</p>
+<p>Underfit models dont change much even if the variance of the dataset
+increases a lot. These type of models suffer from high Bias.</p>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p><figure markdown>
+<img alt="" src="../img/UnderfitDataset.svg" />
+<figcaption>
+In the Underfit Dataset , even though the Actual Dataset is sinusoidal , 
+the structure is assumed to be a linear structure. Our algorithm thinks
+that some of the input is noise not structure.
+</figcaption></p>
+</div>
+<h2 id="bagging-boostrap-aggregation">Bagging (Boostrap Aggregation)</h2>
+<p>Lets say some points <span class="arithmatex">\(\{x_1 , x_2 , \cdots x_n  \} \in \mathcal{N}(\mu , 1)\)</span> with
+some mean <span class="arithmatex">\(\mu\)</span> and variance 1.</p>
+<p>The estimator of unknown mean <span class="arithmatex">\(\mu\)</span> can be,</p>
+<div class="arithmatex">\[\begin{equation*}\begin{split}
+\hat{\mu_1} &amp;= x_1 \\  
+\hat{\mu_2} &amp;= x_2 \\  
+&amp; \vdots \\
+\hat{\mu_n} &amp;= x_n \\  
+\end{split}\end{equation*}\]</div>
+<p>Though the best way to estimate <span class="arithmatex">\(\mu\)</span> would be to use maximum 
+likelihood estimator , <span class="arithmatex">\(\hat{\mu_\text{ML}} = \frac{1}{n} \sum_{i=1}^n x_i\)</span></p>
+<blockquote>
+<p>But why is the Maximum Likelihood the best estimator? </p>
+</blockquote>
+<p>When take an average over a huge dataset for mean <span class="arithmatex">\(\mu\)</span> the , <strong>averaging,
+reduces the variance/fluctuation</strong> of the mean <span class="arithmatex">\(\mu\)</span>.</p>
+<p>We can use this technique of averaging to counter the "High Variance Issue"
+in Overfitted Datasets.</p>
+<h3 id="bagging">Bagging</h3>
+<p>Lets say there are <span class="arithmatex">\(D_1 , D_2 , \cdots , D_m\)</span> datasets , each with <span class="arithmatex">\(n\)</span> 
+datapoints.</p>
+<p>We will now make "Overfit" Decision Trees for each of these datasets.</p>
+<blockquote>
+<p>Yes , we are specifically making overfit decision trees.</p>
+</blockquote>
+<ul>
+<li>Where each Decision Tree is represented as <span class="arithmatex">\(DT_1 , DT_2 , \cdots , DT_m\)</span>.</li>
+<li>Each Decision Tree outputs a Classifier <span class="arithmatex">\(h\)</span> , which is represented as, 
+<span class="arithmatex">\(h_1 , h_2 , \cdots , h_m\)</span>. Moreover , each <span class="arithmatex">\(h_i:\mathbb{R} \to [0,1]\)</span></li>
+<li>Our assumption is that each classifier (<span class="arithmatex">\(h_i\)</span>) is trained independently.</li>
+<li>As we are making the Decision Trees "Overfit" on the training dataset,
+these models will suffer from high variance.</li>
+</ul>
+<p>To reduce their variance , we can average the <span class="arithmatex">\(h_i\)</span> classifiers such that,</p>
+<div class="arithmatex">\[\begin{split}
+h^*(x) = \text{sign} \left(\frac{1}{m} \sum_{i=1}^n h_i(x) \right) \\
+\text{where,} \\ 
+h(z) = \begin{cases} +1 &amp; \text{if } z \geq 0 \\
+0 &amp; \text{otherwise} \end{cases}
+\end{split}\]</div>
+<p>This aggregate classifier (<span class="arithmatex">\(h^*(x)\)</span>) will have lower variance than the 
+original classifiers.</p>
+<blockquote>
+<p>The problem with this approach is that , we only get a single dataset
+not <span class="arithmatex">\(m\)</span> different datasets.</p>
+</blockquote>
+<p>In general , we only get a single dataset , where <span class="arithmatex">\(D = \{(x_1,y_1) , (x_2,y_2) , \cdots (x_n,y_n)\}\)</span>
+and <span class="arithmatex">\(x_i \in \mathbb{R}^d\)</span> and <span class="arithmatex">\(y \in [0,1]\)</span>. To apply this method of 
+averaging (shown above) , our input needs to be <span class="arithmatex">\(m\)</span> different datasets.</p>
+<blockquote>
+<p>A simple approach to divide the single dataset into <span class="arithmatex">\(m\)</span> different 
+datasets would be to just make <span class="arithmatex">\(m\)</span> datasets each having <span class="arithmatex">\(n/m\)</span> , 
+datapoints , where <span class="arithmatex">\(n\)</span> is equal to total number of datapoints in the 
+single dataset.</p>
+<p>The issue with this type of approach is that , each of these <span class="arithmatex">\(m\)</span> datasets
+will not have full "information" about the overall dataset.</p>
+</blockquote>
+<p>To divide the dataset into <span class="arithmatex">\(m\)</span> different datasets , we will make it so 
+that each dataset (<span class="arithmatex">\(D_i\)</span>) has repeated points in them. <strong>This procedure 
+of creating different datasets with repeated points in called Bootstrapping.</strong></p>
+<p>We will create <span class="arithmatex">\(m\)</span> different "Bags" and draw datapoints at random <strong>with replacement</strong>
+from the original (single) dataset. Each "Bag" will have the same number of datapoints
+as in the original (single) dataset.</p>
+<p>This makes it so that some "Bags" have may have datapoints common and even have 
+repeated datapoints within them.</p>
+<p>At the end when we have <span class="arithmatex">\(m\)</span> "Bags" , we can run an algorithm (Example :  Decision Tree) 
+over the "Bags" and reduce their variance by the "Bagging (Bootstrap Aggregation) Method".</p>
+<h3 id="probability-of-repetition-of-points">Probability of Repetition of Points</h3>
+<p>Now that we know that , datapoints are repeated inside the Bags , 
+we want to get a general Probability for the amount of repetition that happens.</p>
+<ul>
+<li>A point appears with the chance of <span class="arithmatex">\(1 / n\)</span> in a bag.</li>
+<li>Probability that it does not appear in the bag is <span class="arithmatex">\((1 - (\frac{1}{n}))^n\)</span></li>
+<li>Probability that it actually appears in the bag <span class="arithmatex">\(1 - (1 - (\frac{1}{n}))^n\)</span><ul>
+<li><strong>For large enough <span class="arithmatex">\(n\)</span> , this probability approximates to around 67%.</strong></li>
+</ul>
+</li>
+</ul>
+<p><strong>Overfit datasets have low Bias and high Variance , but after applying the 
+"Bagging Method" the Variance also reduces (in most cases).</strong></p>
+<h2 id="boosting-adaptive-boosting">Boosting (Adaptive Boosting)</h2>
+<p>The Adaptive Boosting Algorithm can be used to convert "Weak Learners"
+into "Strong Learners" , underfit models are one such example,
+as they suffer from High Bias and Low Variance.</p>
+<p>The input for Adaptive Boosting is our usual <span class="arithmatex">\(D = \{(x_1 , y_1) , (x_2 , y_2) \cdots , (x_2 , y_2) \}\)</span>
+where <span class="arithmatex">\(x_i \in \mathbb{R}^d\)</span> and <span class="arithmatex">\(y_i \in [0,1]\)</span>.</p>
+<ol>
+<li>
+<p>The first step is to initialize the weights for Boosting.</p>
+<ul>
+<li><span class="arithmatex">\(D_0(i) = \frac{1}{n}\)</span> , <span class="arithmatex">\(D_0\)</span> represents the weights at 
+initilization (iteration 0).</li>
+</ul>
+</li>
+<li>
+<p>We will now create a "Bag" and sample points with replacement
+from <span class="arithmatex">\(D_t\)</span>. Then we will input our dataset and distribution/weights (<span class="arithmatex">\(S,D_t\)</span>)
+into a weak learner to get <span class="arithmatex">\(h_t\)</span>.</p>
+<ul>
+<li>If the weak learner/algorithm is not able to handle both the 
+dataset and its distribution/weights then we create a "Bag"
+and use the distribution/weights as probabilities for sampling
+points with replacement.</li>
+<li><span class="arithmatex">\(h_t\)</span> is the classifier , <span class="arithmatex">\(h_t : \mathbb{R}^d \to [0,1]\)</span></li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>After performing step 1, we get the weights for a dataset <span class="arithmatex">\(S\)</span>.</p>
+<p>Lets say at the end of step 2 , we get a decision tree (<span class="arithmatex">\(h_t\)</span>)
+which classifies 600 points correctly and 400 points incorrectly.
+We can change the weights such that , those  400 incorrectly classified 
+datapoints they are classified correctly in the next round ,
+but how? , what changes should we make?</p>
+</blockquote>
+<ol>
+<li>The third step would be to increase or decrease the weights 
+of the points for the next iteration.</li>
+</ol>
+<div class="arithmatex">\[ \hat{D_{t+1}}(i) = \begin{cases} 
+D_t(i) \cdot e^{\alpha_t} &amp; \text{if } h_t(x_i) \neq y_i \\
+D_t(i) \cdot e^{-\alpha_t} &amp; \text{if } h_t(x_i) = y_i \\
+\end{cases} \]</div>
+<ul>
+<li>We are going to decrease the weights of the points which are
+classified correctly and</li>
+<li>Increase the weights of the points classified incorrectly.</li>
+</ul>
+<div class="admonition failure">
+<p class="admonition-title">Failure</p>
+<p>The problem with current formulation of distribution/weights
+is that, when we increase or decrease the weights , they no
+longer sum upto 1.</p>
+</div>
+<ul>
+<li>At the end we will normalize the weights,</li>
+</ul>
+<div class="arithmatex">\[ D_{t+1}(i) = \frac{\hat{D_{t+1}(i)}}{\sum_{i=1}^n \hat{D_{t+1}}(j)} \]</div>
+<ol>
+<li>Repeat step3 unless training error is zero.</li>
+</ol>
+<p>At the end of all these steps we are left with <span class="arithmatex">\(t\)</span> classifiers 
+<span class="arithmatex">\((h_1 , h_2 , \cdots h_t)\)</span> for <span class="arithmatex">\(t\)</span> iterations.
+To combine these classifiers somehow into one single 
+classifier,</p>
+<div class="arithmatex">\[ h^*(x) = \text{sign}\left(\sum_{i=1}^n \alpha_t h_t(x) \right) \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<div class="arithmatex">\[ \alpha_t = \ln \sqrt{\frac{1 - \text{err}(h_t)}{\text{err}(h_t)}} \]</div>
+</div>
+<p>Also, one can prove that </p>
+<div class="arithmatex">\[ \text{If } T \geq \frac{1}{2 \gamma^2} \ln(2n) \]</div>
+<p>then , Training error becomes 0. Here <span class="arithmatex">\(T\)</span> is total number of iterations and 
+<span class="arithmatex">\(\gamma\)</span> is the value which determines "By how much is the weak 
+learner better than random classifier".</p>
+<blockquote>
+<p>If the random classifier has the accuracy of 55% and Weak Learner 
+has accuracy of 60% then <span class="arithmatex">\(\gamma = 60\% - 55\% = 5\% = 0.05\)</span></p>
+</blockquote>
+<p>111</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
